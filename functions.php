@@ -72,3 +72,49 @@ function tailpress(): TailPress\Framework\Theme
 }
 
 tailpress();
+
+// Move jQuery to footer (frontend only)
+add_action('wp_enqueue_scripts', function() {
+	if (!is_admin()) {
+		wp_scripts()->add_data('jquery', 'group', 1);
+		wp_scripts()->add_data('jquery-core', 'group', 1);
+		wp_scripts()->add_data('jquery-migrate', 'group', 1);
+	}
+}, 999);
+
+// Defer jQuery scripts (frontend only)
+add_filter('script_loader_tag', function($tag, $handle) {
+	if (is_admin()) {
+		return $tag;
+	}
+
+	$defer_handles = ['jquery', 'jquery-core', 'jquery-migrate'];
+
+	if (in_array($handle, $defer_handles)) {
+		if (strpos($tag, 'defer') === false) {
+			$tag = str_replace('<script', '<script defer', $tag);
+		}
+	}
+
+	return $tag;
+}, 10, 2);
+
+// Move TailPress scripts to footer
+add_action('wp_enqueue_scripts', function() {
+	if (!is_admin()) {
+		wp_script_add_data('tailpress-modules', 'group', 1);
+		wp_script_add_data('tailpress-app', 'group', 1);
+	}
+}, 999);
+
+// Force module type on modules.js
+add_filter('script_loader_tag', function($tag, $handle, $src) {
+	if (is_admin()) {
+		return $tag;
+	}
+
+	if ($handle === 'tailpress-modules') {
+		return str_replace('type="text/javascript"', 'type="module"', $tag);
+	}
+	return $tag;
+}, 10, 3);

@@ -1,0 +1,186 @@
+/* ===================================================================== */
+/* DROP-DOWN PANEL STRATEGY                                             */
+/* Variables are defined in variables.css                               */
+/* Shared tile styles imported from _tile-system.css                    */
+/* ===================================================================== */
+
+/* ===================================================================== */
+/* MAIN DROP-DOWN PANEL STRATEGY STYLES                                 */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-drop-down-panel {
+
+    /* ----------------------------------------------------------------- */
+    /* Base Panel Styles                                                */
+    /* ----------------------------------------------------------------- */
+
+    & > .wm-nav__submenu {
+        /* Positioning and visibility */
+        position: absolute;
+        z-index: 30;
+        top: 100%;
+        left: auto;
+
+        /* Appearance */
+        background-color: var(--dropdown-panel-bg);
+        border: 1px solid var(--dropdown-panel-border);
+        border-radius: var(--dropdown-panel-border-radius);
+        box-shadow: 0 4px 6px -1px var(--dropdown-panel-shadow), 0 2px 4px -2px var(--dropdown-panel-shadow);
+        padding: var(--dropdown-panel-padding);
+
+        /* Typography */
+        font-family: var(--dropdown-panel-font-family);
+        font-size: var(--dropdown-panel-font-size);
+        line-height: var(--dropdown-panel-line-height);
+        letter-spacing: var(--dropdown-panel-letter-spacing);
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Default Width (when not full width or matchWidthOf)              */
+    /* ----------------------------------------------------------------- */
+
+    &:not(.wm-nav__item--full-width):not(.wm-nav__item--match-width) > .wm-nav__submenu {
+        width: var(--dropdown-panel-default-width);
+        /* Alpine Anchor handles positioning */
+    }
+
+    /* Full Width Variant                                               */
+    /* ----------------------------------------------------------------- */
+
+    &.wm-nav__item--full-width > .wm-nav__submenu {
+        width: 100%;
+        /* Alpine Anchor handles positioning */
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Tile System (Shared with content-panel strategy)                */
+    /* ----------------------------------------------------------------- */
+
+    /* Import shared tile styles - PostCSS will inline this during build */
+    @import './_tile-system.css';
+
+}
+
+/* ===================================================================== */
+/* WIDTH UTILITY VARIANTS FOR DROP-DOWN-PANEL STRATEGY                  */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-drop-down-panel.wm-nav__item--strategy-drop-down-panel {
+
+    /* Small width variant - Higher specificity */
+    &.wm-nav__item--width-small.wm-nav__item--width-small > .wm-nav__submenu {
+        width: var(--width-small);
+
+        & > .wm-nav__list {
+            /* Use auto-fit for responsive columns */
+            grid-template-columns: repeat(auto-fit, minmax(var(--min-tile-width, 200px), 1fr));
+            gap: 0.25rem;
+
+            & > .wm-nav__item {
+                max-width: 100%;
+                min-width: 0;
+                padding: 0.25rem;
+                margin: 0;
+                box-sizing: border-box;
+            }
+        }
+
+        /* Nested content constraints with higher specificity */
+        .wm-nav__item.wm-nav__item .wm-nav__submenu {
+            width: 100%;
+            max-width: 100%;
+            padding: 0.15rem;
+
+            & > .wm-nav__list {
+                width: 100%;
+                max-width: 100%;
+                display: block;
+
+                & > .wm-nav__item.wm-nav__item {
+                    width: 100%;
+                    max-width: 100%;
+                    min-width: 0;
+                    box-sizing: border-box;
+                    padding: 0.1rem;
+                    margin: 0 0 0.05rem 0;
+
+                    & > .wm-nav__link {
+                        width: 100%;
+                        max-width: 100%;
+                        padding: 0.15rem;
+                        font-size: 0.7rem;
+                        line-height: 1.1;
+                        word-wrap: break-word;
+                        hyphens: auto;
+                        display: block;
+                        box-sizing: border-box;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Large width variant - Higher specificity */
+    &.wm-nav__item--width-large.wm-nav__item--width-large > .wm-nav__submenu {
+        width: var(--width-large);
+
+        & > .wm-nav__list {
+            /* Use auto-fit for responsive columns */
+            grid-template-columns: repeat(auto-fit, minmax(var(--min-tile-width, 200px), 1fr));
+
+            & > .wm-nav__item {
+                max-width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+        }
+    }
+
+    /* Extra large width variant - Higher specificity */
+    &.wm-nav__item--width-xl.wm-nav__item--width-xl > .wm-nav__submenu {
+        width: var(--width-xl);
+
+        & > .wm-nav__list {
+            /* Use auto-fit for responsive columns */
+            grid-template-columns: repeat(auto-fit, minmax(var(--min-tile-width, 200px), 1fr));
+
+            & > .wm-nav__item {
+                max-width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+        }
+    }
+
+    /* Universal nested content constraints with higher specificity */
+    &[class*="--width-"].wm-nav__item--strategy-drop-down-panel .wm-nav__item.wm-nav__item .wm-nav__submenu,
+    &[class*="--match-"].wm-nav__item--strategy-drop-down-panel .wm-nav__item.wm-nav__item .wm-nav__submenu,
+    &[class*="--full-"].wm-nav__item--strategy-drop-down-panel .wm-nav__item.wm-nav__item .wm-nav__submenu {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+
+        & > .wm-nav__list {
+            width: 100%;
+            max-width: 100%;
+            display: block;
+            box-sizing: border-box;
+
+            & > .wm-nav__item.wm-nav__item {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+
+                & > .wm-nav__link {
+                    width: 100%;
+                    max-width: 100%;
+                    word-wrap: break-word;
+                    hyphens: auto;
+                    display: block;
+                    box-sizing: border-box;
+                }
+            }
+        }
+    }
+}

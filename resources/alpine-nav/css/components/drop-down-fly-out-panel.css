@@ -1,0 +1,500 @@
+
+
+/* ========================================
+   DROP-DOWN FLY-OUT PANEL CSS
+   Multi-level navigation with dropdown and flyout functionality
+   ======================================== */
+
+/* CSS Variables for drop-down-fly-out-panel strategy - colors, typography, spacing, and dimensions */
+:root {
+    /* Colors - Level 0 (Root Panel) */
+    --flyout-level0-bg-start: #fff;
+    --flyout-level0-bg-end: #fff;
+    --flyout-level0-text: var(--color-primary-500);
+    --flyout-level0-hover-bg: var(--color-secondary-500);
+    --flyout-level0-hover-text: #ffffff;
+    --flyout-level0-border: rgba(0, 0, 0, 0.1);
+
+    /* Colors - Level 1 (Vertical List Items) */
+    --flyout-level1-text: var(--color-dark-700);
+    --flyout-level1-hover-bg: var(--color-primary-500);
+    --flyout-level1-hover-text: #ffffff;
+    --flyout-level1-border: #bbb;
+
+    /* Colors - Level 2 (Flyout Panel and Tiles) */
+    --flyout-level2-bg: #e5e7eb; /* gray-200 */
+    --flyout-level2-tile-bg: #ffffff;
+    --flyout-level2-text: var(--color-primary-500);
+    --flyout-level2-hover-bg: var(--color-secondary-500);
+    --flyout-level2-hover-text: #ffffff;
+    --flyout-level2-border: rgba(0, 0, 0, 0.05);
+    --flyout-level2-shadow: rgba(71, 85, 105, 0.3);
+
+    /* Colors - Level 3+ (Nested Items) */
+    --flyout-level3-text: var(--color-secondary-600);
+    --flyout-level3-hover-bg: var(--color-primary-500);
+    --flyout-level3-hover-text: #ffffff;
+
+    /* Customizable Width Variables */
+    --flyout-level0-width: 300px; /* Level 0 dropdown panel width */
+    --flyout-level2-width: 700px; /* Level 2 flyout panel width - you can customize this! */
+    --flyout-level2-min-column-width: 200px; /* Minimum width for grid columns */
+
+    /* Typography - Level 0 (Root Panel) */
+    --flyout-level0-font-family: inherit;
+    --flyout-level0-font-size: 0.875rem; /* 14px */
+    --flyout-level0-line-height: 1.5;
+    --flyout-level0-letter-spacing: 0;
+
+    /* Typography - Level 1 (Vertical List Items) */
+    --flyout-level1-font-family: inherit;
+    --flyout-level1-font-size: 0.875rem;
+    --flyout-level1-font-weight: 400;
+    --flyout-level1-line-height: 1.5;
+    --flyout-level1-letter-spacing: 0;
+
+    /* Typography - Level 2 (Flyout Panel Tiles) */
+    --flyout-level2-font-family: inherit;
+    --flyout-level2-font-size: 0.875rem;
+    --flyout-level2-line-height: 1.4;
+    --flyout-level2-letter-spacing: 0;
+    --flyout-level2-tile-header-font-size: 0.875rem;
+    --flyout-level2-tile-header-font-weight: 700;
+    --flyout-level2-tile-header-line-height: 1.4;
+
+    /* Typography - Level 3+ (Nested Items) */
+    --flyout-level3-font-family: inherit;
+    --flyout-level3-font-size: 0.8125rem; /* 13px */
+    --flyout-level3-font-weight: 400;
+    --flyout-level3-line-height: 1.4;
+    --flyout-level3-letter-spacing: 0;
+
+    /* Spacing - Level 0 */
+    --flyout-level0-padding: 0.25rem 0; /* py-1 */
+
+    /* Spacing - Level 1 */
+    --flyout-level1-item-padding: 0.5rem; /* p-2 */
+    --flyout-level1-border-width: 1px;
+
+    /* Spacing - Level 2 */
+    --flyout-level2-padding: 0.5rem; /* p-2 */
+    --flyout-level2-tile-padding: 0.5rem; /* p-2 */
+    --flyout-level2-tile-margin: 0 0 0.5rem 0; /* mb-2 */
+    --flyout-level2-tile-header-padding: 0.25rem; /* p-1 */
+    --flyout-level2-gap: 1rem;
+
+    /* Spacing - Level 3+ */
+    --flyout-level3-item-padding: 0.25rem; /* p-1 */
+    --flyout-level3-item-margin: 0 0 0.25rem 0; /* mb-1 */
+    --flyout-level3-link-padding: 0.25rem 0.25rem 0.25rem 0.25rem; /* py-1 pl-1 */
+    --flyout-level3-indent: 0.5rem; /* padding-left for indentation */
+
+    /* Border Radius */
+    --flyout-border-radius: 0.375rem; /* rounded-md */
+    --flyout-tile-border-radius: 0.375rem; /* rounded */
+
+    /* Indicators */
+    --flyout-indicator-size: 1.25rem; /* 20px */
+    --flyout-indicator-margin: 0 0 0 0.5rem; /* ml-2 */
+
+    /* Animation/Transitions */
+    --flyout-transition-duration: 300ms;
+    --flyout-transition-timing: ease-out;
+    --flyout-opacity-duration: 200ms;
+    --flyout-level2-transition-duration: 350ms;
+}
+
+/* Fly-out panel: level-0 shows a dropdown panel; level-1 vertical; level-2+ fly-out panel with ALL content immediately visible */
+.wm-nav .wm-nav__item.wm-nav__item--strategy-drop-down-fly-out-panel {
+    /* Level-0 panel (under the root item) */
+    & > .wm-nav__submenu {
+        position: absolute;
+        z-index: 30;
+        top: calc(100% + var(--navbar-submenu-y-offset));
+        background-color: var(--flyout-level0-bg-start);
+        background-image: linear-gradient(to right, var(--flyout-level0-bg-start), var(--flyout-level0-bg-end));
+        background: linear-gradient(to right, var(--flyout-level0-bg-start), var(--flyout-level0-bg-end));
+        color: var(--flyout-level0-text);
+        border: 1px solid var(--flyout-level0-border);
+        box-shadow: 0 4px 6px -1px var(--flyout-level2-shadow), 0 2px 4px -2px var(--flyout-level2-shadow);
+        border-radius: var(--flyout-border-radius);
+        padding: var(--flyout-level0-padding);
+        font-family: var(--flyout-level0-font-family);
+        font-size: var(--flyout-level0-font-size);
+        line-height: var(--flyout-level0-line-height);
+        letter-spacing: var(--flyout-level0-letter-spacing);
+        left: -9999px; /* parked until open */
+    }
+
+    /* Level-1 vertical list inside the panel */
+    & > .wm-nav__submenu > .wm-nav__list {
+        position: relative;
+        width: 100%;
+    }
+
+    /* CRITICAL: Reset inheritance for ALL nested items to prevent level-1 styles bleeding down */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item .wm-nav__item {
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        background-color: transparent;
+        background-image: none;
+        background: transparent;
+        color: inherit;
+
+        &:hover {
+            background-color: transparent;
+            background-image: none;
+            background: transparent;
+            color: inherit;
+            border-radius: 0;
+        }
+    }
+
+    /* Level-1 items inside the dropdown panel */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item {
+        position: static;
+        border-bottom: var(--flyout-level1-border-width) solid var(--flyout-level1-border);
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        background-color: transparent;
+        background-image: none;
+        background: transparent;
+        color: var(--flyout-level1-text);
+        overflow: visible; /* Ensure flyouts aren't clipped */
+        /* Add smooth hover transition */
+        transition:
+                background-color var(--flyout-opacity-duration) var(--flyout-transition-timing),
+                color var(--flyout-opacity-duration) var(--flyout-transition-timing);
+
+        &:last-of-type {
+            border-bottom-width: 0;
+        }
+
+        &:hover {
+            background-color: var(--flyout-level1-hover-bg);
+            background-image: none;
+            background: var(--flyout-level1-hover-bg);
+            color: var(--flyout-level1-hover-text);
+            border-radius: var(--flyout-border-radius);
+        }
+    }
+
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+        color: var(--flyout-level1-text);
+        font-family: var(--flyout-level1-font-family);
+        font-size: var(--flyout-level1-font-size);
+        font-weight: var(--flyout-level1-font-weight);
+        line-height: var(--flyout-level1-line-height);
+        letter-spacing: var(--flyout-level1-letter-spacing);
+        padding: var(--flyout-level1-item-padding);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        /* Add smooth transition */
+        transition: color var(--flyout-opacity-duration) var(--flyout-transition-timing);
+    }
+
+    /* Level-1 hover effects for links and labels - Higher specificity */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link > .wm-nav__label,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link[class*="text-"],
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link > .wm-nav__label[class*="text-"] {
+        color: var(--flyout-level1-hover-text);
+    }
+
+    /* Level-2 fly-out panel (shows immediately like dropdown panel) */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+        position: absolute;
+        z-index: 30;
+        background: var(--flyout-level2-bg);
+        border: 1px solid var(--flyout-level2-border);
+        box-shadow: 0 4px 6px -1px var(--flyout-level2-shadow), 0 2px 4px -2px var(--flyout-level2-shadow);
+        border-radius: var(--flyout-border-radius);
+        padding: var(--flyout-level2-padding);
+        width: var(--flyout-level2-width);
+        max-height: none;
+        overflow: hidden;
+        font-family: var(--flyout-level2-font-family);
+        font-size: var(--flyout-level2-font-size);
+        line-height: var(--flyout-level2-line-height);
+        letter-spacing: var(--flyout-level2-letter-spacing);
+        left: -9999px;  /* parked until positioned */
+    }
+
+    /* Level-2 list content (use grid instead of columns for better height control) */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list {
+        position: relative;
+        width: 100%;
+        columns: initial;
+        column-gap: normal;
+        /* Use CSS Grid for better control with customizable column width */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(var(--flyout-level2-min-column-width), 1fr));
+        gap: var(--flyout-level2-gap);
+        align-items: start; /* Align items to top instead of stretching */
+    }
+
+    /* Level-2 items (the column tiles) - with proper containment and reset inheritance */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item {
+        width: 100%;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        background-color: var(--flyout-level2-tile-bg);
+        background-image: none;
+        background: var(--flyout-level2-tile-bg);
+        color: var(--flyout-level2-text);
+        border-radius: var(--flyout-tile-border-radius);
+        padding: var(--flyout-level2-tile-padding);
+        margin: var(--flyout-level2-tile-margin);
+        break-inside: auto;
+        position: relative;
+        overflow: hidden; /* Prevent content from escaping */
+        /* Add smooth hover transition */
+        transition:
+                background-color var(--flyout-opacity-duration) var(--flyout-transition-timing),
+                color var(--flyout-opacity-duration) var(--flyout-transition-timing);
+
+        /* RESET: Override any inherited level-1 styles */
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+
+        /* Reset hover to prevent level-1 hover inheritance */
+        &:hover {
+            background-color: var(--flyout-level2-hover-bg);
+            background-image: none;
+            background: var(--flyout-level2-hover-bg);
+            color: var(--flyout-level2-hover-text);
+            border-radius: var(--flyout-tile-border-radius);
+        }
+
+        /* Make ALL nested submenus visible immediately but contained */
+        .wm-nav__submenu {
+            position: static;
+            left: auto;
+            top: auto;
+            background-color: transparent;
+            background-image: none;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            visibility: visible;
+            display: block;
+            width: 100%;
+            overflow: visible;
+            max-width: 100%;
+            /* Remove transitions for inline content */
+            transition: none;
+            transform: none;
+        }
+    }
+
+    /* Level-2 item links (the tile headers) */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+        color: var(--flyout-level2-text);
+        font-family: var(--flyout-level2-font-family);
+        font-size: var(--flyout-level2-tile-header-font-size);
+        font-weight: var(--flyout-level2-tile-header-font-weight);
+        line-height: var(--flyout-level2-tile-header-line-height);
+        letter-spacing: var(--flyout-level2-letter-spacing);
+        padding: var(--flyout-level2-tile-header-padding);
+        display: block;
+        width: 100%;
+        /* Add smooth transition */
+        transition: color var(--flyout-opacity-duration) var(--flyout-transition-timing);
+
+        /* Hide indicators on level-2 headers since they don't need hover */
+        .wm-nav__indicator {
+            display: none;
+        }
+    }
+
+    /* Level-2 hover effects for tile headers - Higher specificity */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link > .wm-nav__label,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link[class*="text-"],
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover > .wm-nav__link > .wm-nav__label[class*="text-"] {
+        color: var(--flyout-level2-hover-text);
+    }
+
+    /* Level-3+ nested lists (vertical under their parent) - properly contained */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu .wm-nav__item .wm-nav__list {
+        display: block;
+        width: 100%;
+        columns: initial;
+        column-gap: normal;
+        width: 100%;
+        max-width: 100%;
+        position: relative;
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Level-3+ nested items (vertical list under level-2 tiles) - contained properly with inheritance reset */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu .wm-nav__item .wm-nav__item {
+        background-color: transparent;
+        background-image: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        width: 100%;
+        break-inside: auto;
+        position: relative;
+        overflow: hidden;
+        max-width: 100%;
+        margin: var(--flyout-level3-item-margin);
+        padding: var(--flyout-level3-item-padding);
+        /* Use padding instead of margin for indentation */
+        padding-left: var(--flyout-level3-indent);
+        color: var(--flyout-level3-text);
+        /* Add smooth hover transition */
+        transition:
+                background-color var(--flyout-opacity-duration) var(--flyout-transition-timing),
+                color var(--flyout-opacity-duration) var(--flyout-transition-timing);
+
+        /* CRITICAL: Reset all inherited hover and border styles */
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+
+        &:hover {
+            background-color: var(--flyout-level3-hover-bg);
+            background-image: none;
+            background: var(--flyout-level3-hover-bg);
+            color: var(--flyout-level3-hover-text);
+            border-radius: var(--flyout-border-radius);
+        }
+
+        .wm-nav__link {
+            color: var(--flyout-level3-text);
+            font-family: var(--flyout-level3-font-family);
+            font-size: var(--flyout-level3-font-size);
+            font-weight: var(--flyout-level3-font-weight);
+            line-height: var(--flyout-level3-line-height);
+            letter-spacing: var(--flyout-level3-letter-spacing);
+            padding: var(--flyout-level3-link-padding);
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Add smooth transition */
+            transition: color var(--flyout-opacity-duration) var(--flyout-transition-timing);
+        }
+    }
+
+    /* Level-3+ hover effects for links and labels - Higher specificity */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu .wm-nav__item .wm-nav__item:hover .wm-nav__link,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu .wm-nav__item .wm-nav__item:hover .wm-nav__link > .wm-nav__label,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu .wm-nav__item .wm-nav__item:hover .wm-nav__link[class*="text-"],
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu .wm-nav__item .wm-nav__item:hover .wm-nav__link > .wm-nav__label[class*="text-"] {
+        color: var(--flyout-level3-hover-text);
+    }
+
+    /* Chevron on level-1 parents only (they trigger the flyout) */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item.wm-nav__item--parent > .wm-nav__link > .wm-nav__indicator {
+        display: inline-flex;
+        align-items: center;
+        margin: var(--flyout-indicator-margin);
+        flex-shrink: 0;
+    }
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item.wm-nav__item--parent > .wm-nav__link > .wm-nav__indicator::after {
+        font-family: 'icomoon';
+        content: '\e900'; /* right chevron */
+        font-size: var(--flyout-indicator-size);
+        display: inline-block;
+    }
+
+    /* Active states */
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item.wm-nav__item--active > .wm-nav__link,
+    & > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__submenu > .wm-nav__list > .wm-nav__item.wm-nav__item--active > .wm-nav__link {
+        color: var(--flyout-level2-text);
+    }
+}
+
+/* ===================================================================== */
+/* WIDTH UTILITY VARIANTS FOR DROP-DOWN FLY-OUT-PANEL STRATEGY          */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-drop-down-fly-out-panel {
+
+    /* Small width variant - affects level 0 dropdown width */
+    &.wm-nav__item--width-small > .wm-nav__submenu {
+        width: var(--width-small);
+
+        /* Also adjust level 2 flyout width to be proportional */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+            width: calc(var(--width-small) * 1.5);
+        }
+    }
+
+    /* Large width variant */
+    &.wm-nav__item--width-large > .wm-nav__submenu {
+        width: var(--width-large);
+
+        /* Adjust level 2 flyout width */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+            width: calc(var(--width-large) * 0.8);
+        }
+    }
+
+    /* Extra large width variant */
+    &.wm-nav__item--width-xl > .wm-nav__submenu {
+        width: var(--width-xl);
+
+        /* Adjust level 2 flyout width */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+            width: var(--width-large);
+        }
+    }
+
+    /* Container width */
+    &.wm-nav__item--match-container > .wm-nav__submenu {
+        width: var(--container-max-width);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
+
+        /* Level 2 flyout should be smaller than container */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+            width: var(--width-large);
+        }
+    }
+
+    /* Site width */
+    &.wm-nav__item--match-site > .wm-nav__submenu {
+        width: var(--site-max-width);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
+
+        /* Level 2 flyout should be smaller than site width */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+            width: var(--width-xl);
+        }
+    }
+
+    /* Full viewport width */
+    &.wm-nav__item--full-viewport > .wm-nav__submenu {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        max-width: none;
+
+        /* Level 2 flyout should not be full viewport */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__submenu {
+            width: var(--width-xl);
+        }
+    }
+}

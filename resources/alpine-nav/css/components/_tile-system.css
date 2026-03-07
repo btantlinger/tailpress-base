@@ -1,0 +1,168 @@
+/* ===================================================================== */
+/* SHARED TILE SYSTEM                                                   */
+/* Used by both drop-down-panel and content-panel strategies            */
+/* This file is imported via PostCSS - do not include directly          */
+/* ===================================================================== */
+
+/* NOTE: This file uses a mixin-like pattern where the parent selector
+ * must be established by the importing file. The & selector will refer
+ * to the strategy-specific parent class.
+ */
+
+/* ----------------------------------------------------------------- */
+/* Grid Layout System                                                */
+/* ----------------------------------------------------------------- */
+
+/* Responsive auto-fit grid layout - only for level-0 (main panel) */
+& > .wm-nav__submenu > .wm-nav__list {
+    position: relative;
+    width: 100%;
+    display: grid;
+    gap: var(--dropdown-panel-gap);
+    /* Auto-fit creates as many columns as fit based on minimum tile width */
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-tile-width, 200px), 1fr));
+}
+
+/* ----------------------------------------------------------------- */
+/* Tile Styles (Level 1 Items)                                      */
+/* ----------------------------------------------------------------- */
+
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item {
+    background-color: var(--dropdown-panel-tile-bg);
+    border-radius: var(--dropdown-panel-tile-border-radius);
+    border: var(--dropdown-panel-tile-border);
+    padding: var(--dropdown-panel-tile-padding);
+    margin: var(--dropdown-panel-tile-margin);
+    box-shadow: var(--dropdown-panel-tile-shadow);
+}
+
+/* Tile headers (main links) */
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+    display: block;
+    padding: var(--dropdown-panel-tile-header-padding);
+
+    /* Typography */
+    font-family: var(--dropdown-panel-font-family);
+    font-size: var(--dropdown-panel-tile-header-font-size);
+    font-weight: var(--dropdown-panel-tile-header-font-weight);
+    line-height: var(--dropdown-panel-tile-header-line-height);
+    letter-spacing: var(--dropdown-panel-letter-spacing);
+    text-transform: var(--dropdown-panel-tile-header-text-transform);
+
+    /* Transitions */
+    transition:
+        background-color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing),
+        color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing);
+}
+
+/* Special styling for level-1 items */
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item.wm-nav__item--level-1 > .wm-nav__link {
+    color: var(--dropdown-panel-tile-header-color);
+    background: var(--dropdown-panel-tile-header-bg);
+    border-radius: var(--dropdown-panel-tile-header-border-radius);
+    margin: var(--dropdown-panel-tile-header-margin);
+}
+
+/* Hide indicators in tiles */
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link > .wm-nav__indicator {
+    display: none;
+}
+
+/* Tile hover effects */
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link:hover {
+    background-color: var(--dropdown-panel-tile-header-hover-bg);
+    color: var(--dropdown-panel-hover-text);
+    border-radius: var(--dropdown-panel-tile-border-radius);
+}
+
+/* Ensure hover text applies to labels */
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link:hover .wm-nav__label {
+    color: var(--dropdown-panel-hover-text);
+}
+
+/* Active state styling */
+& > .wm-nav__submenu > .wm-nav__list > .wm-nav__item.wm-nav__item--active > .wm-nav__link {
+    color: var(--dropdown-panel-text);
+    border-radius: var(--dropdown-panel-tile-border-radius);
+
+    &:hover {
+        background-color: var(--dropdown-panel-tile-header-hover-bg);
+        color: var(--dropdown-panel-hover-text);
+    }
+}
+
+/* ----------------------------------------------------------------- */
+/* Nested Content (Level 2+)                                        */
+/* ----------------------------------------------------------------- */
+
+/* Nested submenus: inline rendering - CRITICAL for drop-down-panel */
+& .wm-nav__item .wm-nav__submenu {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    border: none !important;
+    transition: none !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: auto !important;
+}
+
+/* Nested lists: vertical stacking */
+& .wm-nav__item .wm-nav__submenu > .wm-nav__list {
+    display: block;
+    width: 100%;
+    position: relative;
+    columns: initial;
+    column-gap: normal;
+}
+
+/* Nested items: normalized styling */
+& .wm-nav__item .wm-nav__submenu > .wm-nav__list > .wm-nav__item {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    break-inside: auto;
+}
+
+/* Nested item styling */
+& > .wm-nav__submenu .wm-nav__list > .wm-nav__item .wm-nav__list > .wm-nav__item {
+    border-radius: var(--dropdown-panel-tile-border-radius);
+    padding: var(--dropdown-panel-nested-item-padding);
+}
+
+/* Nested links */
+& .wm-nav__item .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+    font-family: var(--dropdown-panel-font-family);
+    font-size: var(--dropdown-panel-nested-font-size);
+    font-weight: var(--dropdown-panel-nested-font-weight);
+    line-height: var(--dropdown-panel-nested-line-height);
+    padding: var(--dropdown-panel-nested-link-padding);
+    text-transform: var(--dropdown-panel-nested-text-transform);
+
+    /* Colors */
+    color: var(--dropdown-panel-nested-text);
+    background-color: transparent;
+
+    transition:
+        background-color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing),
+        color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing);
+}
+
+/* Nested link hover effects */
+& > .wm-nav__submenu .wm-nav__list > .wm-nav__item .wm-nav__list > .wm-nav__item > .wm-nav__link:hover {
+    background-color: var(--dropdown-panel-nested-hover-bg);
+    color: var(--dropdown-panel-nested-hover-text);
+    border-radius: var(--dropdown-panel-tile-border-radius);
+}

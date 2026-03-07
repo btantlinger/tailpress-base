@@ -1,0 +1,265 @@
+/* ========================================
+   Desktop MENU CSS
+   Base styles and customizable themes for Desktop navigation
+   Variables are defined in variables.css
+   ======================================== */
+
+/* ========================================
+   BASE NAVIGATION STRUCTURE
+   ======================================== */
+.wm-nav {
+    position: relative;
+    z-index: 30;
+}
+
+.wm-nav__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.wm-nav__list--level-0 {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+}
+
+.wm-nav__item--level-0 {
+    position: relative;
+}
+
+/* ========================================
+   CHEVRON INDICATORS
+   ======================================== */
+.wm-nav__item--level-0.wm-nav__item--parent > .wm-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--navbar-chevron-gap);
+}
+
+.wm-nav__item--level-0.wm-nav__item--parent > .wm-nav__link .wm-nav__indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--navbar-chevron-size);
+    height: var(--navbar-chevron-size);
+    margin-left: var(--navbar-chevron-margin);
+    flex-shrink: 0;
+}
+
+.wm-nav__item--level-0.wm-nav__item--parent > .wm-nav__link .wm-nav__indicator::before {
+    content: "";
+    display: block;
+    width: var(--navbar-chevron-size);
+    height: var(--navbar-chevron-size);
+
+    /* Paint chevron with the link color */
+    background-color: currentColor;
+
+    /* SVG used as a mask (color comes from background-color above) */
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: var(--navbar-chevron-size) var(--navbar-chevron-size);
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg width='10' height='10' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: var(--navbar-chevron-size) var(--navbar-chevron-size);
+    mask-image: url("data:image/svg+xml;utf8,<svg width='10' height='10' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
+    transition: var(--navbar-chevron-transition);
+}
+
+.wm-nav__item--level-0.wm-nav__item--parent:hover > .wm-nav__link .wm-nav__indicator::before,
+.wm-nav__item--level-0.wm-nav__item--parent.wm-nav__item--active > .wm-nav__link .wm-nav__indicator::before {
+    transform: rotate(180deg);
+}
+
+.wm-nav__item--level-0:not(.wm-nav__item--parent) > .wm-nav__link .wm-nav__indicator {
+    display: none;
+}
+
+/* Make dropdown-panel (level-1) parents behave the same way */
+.wm-nav__item--level-1.wm-nav__item--parent > .wm-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--navbar-chevron-gap);
+}
+
+.wm-nav__item--level-1.wm-nav__item--parent > .wm-nav__link .wm-nav__indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--navbar-chevron-size);
+    height: var(--navbar-chevron-size);
+    margin-left: var(--navbar-chevron-margin);
+    flex-shrink: 0;
+}
+
+.wm-nav__item--level-1.wm-nav__item--parent > .wm-nav__link .wm-nav__indicator::before {
+    content: "";
+    display: block;
+    width: var(--navbar-chevron-size);
+    height: var(--navbar-chevron-size);
+
+    background-color: currentColor;
+
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: var(--navbar-chevron-size) var(--navbar-chevron-size);
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg width='10' height='10' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: var(--navbar-chevron-size) var(--navbar-chevron-size);
+    mask-image: url("data:image/svg+xml;utf8,<svg width='10' height='10' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M6 9l6 6 6-6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+
+    transition: var(--navbar-chevron-transition);
+}
+
+.wm-nav__item--level-1.wm-nav__item--parent:hover > .wm-nav__link .wm-nav__indicator::before,
+.wm-nav__item--level-1.wm-nav__item--parent.wm-nav__item--active > .wm-nav__link .wm-nav__indicator::before {
+    transform: rotate(180deg);
+}
+
+.wm-nav__item--level-1:not(.wm-nav__item--parent) > .wm-nav__link .wm-nav__indicator {
+    display: none;
+}
+
+/* ========================================
+   SUBMENU POSITIONING
+   ======================================== */
+.wm-nav__item--level-0 > .wm-nav__submenu {
+    position: absolute;
+    top: calc(100% + var(--navbar-submenu-y-offset));
+}
+
+/* Invisible bridge to maintain hover state across gaps */
+.wm-nav__item--level-0 > .wm-nav__submenu::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--navbar-submenu-y-offset, 0px);
+    top: calc(-1 * var(--navbar-submenu-y-offset, 0px));
+    pointer-events: auto;
+    background: transparent;
+}
+
+/* ========================================
+   MOBILE MENU
+   ======================================== */
+.wm-nav__mobile {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+/* ========================================
+   CUSTOMIZABLE THEMES
+   ======================================== */
+.wm-nav--custom {
+    background: var(--navbar-bg);
+    height: var(--navbar-height);
+    border-radius: var(--navbar-border-radius);
+    box-shadow: var(--navbar-box-shadow);
+}
+
+.wm-nav--custom .wm-nav__container {
+    padding: var(--navbar-padding);
+    height: 100%;
+}
+
+.wm-nav--custom .wm-nav__item--level-0 > .wm-nav__link {
+    color: var(--navbar-item-color);
+    padding: var(--navbar-item-padding);
+    font-size: var(--navbar-item-font-size);
+    font-weight: var(--navbar-item-font-weight);
+    border-radius: var(--navbar-item-border-radius);
+    transition: var(--navbar-transition);
+    display: flex;
+}
+
+.wm-nav--custom .wm-nav__item--level-0 > .wm-nav__link > span {
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.wm-nav--custom .wm-nav__item--level-0 > .wm-nav__link:hover,
+.wm-nav--custom .wm-nav__item--level-0:has(.wm-nav__item--level-1:hover) > .wm-nav__link {
+    background-color: var(--navbar-item-hover-bg);
+    color: var(--navbar-item-hover-color);
+}
+
+/* ========================================
+   THEME VARIANTS
+   ======================================== */
+.wm-nav--dark {
+    --navbar-bg: var(--color-dark-800);
+    --navbar-item-color: var(--color-light-200);
+    --navbar-item-hover-bg: var(--color-dark-600);
+}
+
+.wm-nav--minimal {
+    --navbar-bg: var(--color-light-500);
+    --navbar-item-color: var(--color-dark-500);
+    --navbar-item-hover-bg: var(--color-light-400);
+    --navbar-box-shadow: none;
+}
+
+.wm-nav--rounded {
+    --navbar-border-radius: 0.75rem;
+}
+
+/* ========================================
+   SUBMENU GAP UTILITIES
+   ======================================== */
+.wm-nav--submenu-gap-sm {
+    --navbar-submenu-y-offset: 0.25rem;
+}
+
+.wm-nav--submenu-gap-md {
+    --navbar-submenu-y-offset: 0.5rem;
+}
+
+.wm-nav--submenu-gap-lg {
+    --navbar-submenu-y-offset: 1rem;
+}
+
+.wm-nav--submenu-gap-xl {
+    --navbar-submenu-y-offset: 1.5rem;
+}
+
+.wm-nav--submenu-overlap-sm {
+    --navbar-submenu-y-offset: -0.25rem;
+}
+
+.wm-nav--submenu-overlap-md {
+    --navbar-submenu-y-offset: -0.5rem;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+    .wm-nav__list--level-0 {
+        display: none;
+    }
+}
+
+
+
+
+
+/* ========================================
+   NOTES ON WIDTH UTILITIES
+   ======================================== */
+/* Width utilities are now handled by individual strategy files:
+ * - drop-down-panel.css handles width variants for panel strategy
+ * - drop-down-fly-out-panel.css handles width variants for flyout strategy
+ * - drill-down.css handles width variants for drill-down strategy
+ * This prevents conflicts and allows strategy-specific customization
+ */
+

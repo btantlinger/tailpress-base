@@ -1,0 +1,522 @@
+/* ===================================================================== */
+/* CONTENT PANEL STRATEGY                                               */
+/* Variables are defined in variables.css                               */
+/* ===================================================================== */
+
+/* ===================================================================== */
+/* MAIN CONTENT PANEL STRATEGY STYLES                                   */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-content-panel {
+
+    /* ----------------------------------------------------------------- */
+    /* Base Panel Styles (inherit from drop-down-panel)                */
+    /* ----------------------------------------------------------------- */
+
+    & > .wm-nav__submenu {
+        /* Positioning and visibility */
+        position: absolute;
+        z-index: 30;
+        top: 100%;
+        left: auto;
+
+        /* Appearance */
+        background-color: var(--dropdown-panel-bg);
+        border: 1px solid var(--dropdown-panel-border);
+        border-radius: var(--dropdown-panel-border-radius);
+        box-shadow: 0 4px 6px -1px var(--dropdown-panel-shadow), 0 2px 4px -2px var(--dropdown-panel-shadow);
+        padding: var(--dropdown-panel-padding);
+
+        /* Typography */
+        font-family: var(--dropdown-panel-font-family);
+        font-size: var(--dropdown-panel-font-size);
+        line-height: var(--dropdown-panel-line-height);
+        letter-spacing: var(--dropdown-panel-letter-spacing);
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Default Width (when not full width or matchWidthOf)              */
+    /* ----------------------------------------------------------------- */
+
+    &:not(.wm-nav__item--full-width):not(.wm-nav__item--match-width) > .wm-nav__submenu {
+        width: var(--content-panel-default-width, 900px);
+        /* Alpine Anchor handles positioning */
+    }
+
+    /* Full Width Variant                                               */
+    /* ----------------------------------------------------------------- */
+
+    &.wm-nav__item--full-width > .wm-nav__submenu {
+        width: 100%;
+        /* Alpine Anchor handles positioning */
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Content Panel Wrapper                                            */
+    /* ----------------------------------------------------------------- */
+
+    & > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+        display: flex;
+        flex-direction: column; /* Default to column - row layouts will override */
+        gap: var(--content-panel-gap, 1rem);
+        width: 100%;
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Content Blocks Section                                           */
+    /* ----------------------------------------------------------------- */
+
+    & .wm-nav__content-blocks {
+        display: flex;
+        flex-direction: column;
+        gap: var(--content-panel-content-gap, 1rem);
+
+
+
+    }
+
+    /* Text Block */
+    & .wm-nav__content-block--text_block {
+        padding: var(--content-panel-text-padding, 1rem);
+        background: var(--content-panel-text-bg, #f8f9fa);
+        border-radius: var(--content-panel-text-radius, 0.5rem);
+
+        & h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--content-panel-text-heading-color, var(--color-primary-600));
+            font-size: var(--content-panel-text-heading-font-size, 1.125rem);
+            font-weight: var(--content-panel-text-heading-font-weight, 600);
+        }
+
+        & .wm-nav__content-text {
+            color: var(--content-panel-text-color, var(--color-gray-700));
+            line-height: 1.6;
+
+            & p:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    /* Image Block */
+    & .wm-nav__content-block--image_block {
+        text-align: center;
+
+        & img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--content-panel-image-radius, 0.375rem);
+        }
+
+        &.wm-nav__content-block--image-linked {
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+    }
+
+    /* CTA Block */
+    & .wm-nav__content-block--cta_block {
+        padding: var(--content-panel-cta-padding, 1.5rem);
+        background: var(--content-panel-cta-bg, var(--color-primary-50));
+        border-radius: var(--content-panel-cta-radius, 0.5rem);
+        text-align: center;
+        border: 1px solid var(--content-panel-cta-border, var(--color-primary-200));
+
+        & h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--content-panel-cta-heading-color, var(--color-primary-700));
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        & .wm-nav__cta-description {
+            margin: 0 0 1rem 0;
+            color: var(--content-panel-cta-text-color, var(--color-gray-600));
+            line-height: 1.5;
+        }
+
+        & .wm-nav__cta-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--content-panel-cta-button-bg, var(--color-primary-500));
+            color: var(--content-panel-cta-button-color, #ffffff);
+            text-decoration: none;
+            border-radius: var(--content-panel-cta-button-radius, 0.375rem);
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+
+            &:hover {
+                background: var(--content-panel-cta-button-hover-bg, var(--color-primary-600));
+                color: var(--content-panel-cta-button-color, #ffffff);
+            }
+        }
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Navigation Section (Level 1 Items as Grid Blocks)               */
+    /* Uses shared tile system from drop-down-panel strategy            */
+    /* ----------------------------------------------------------------- */
+
+    & .wm-nav__navigation-section {
+        width: 100%;
+
+        /* Use same grid system as drop-down-panel */
+        & > .wm-nav__list {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: var(--dropdown-panel-gap);
+            grid-template-columns: repeat(auto-fit, minmax(var(--min-tile-width, 200px), 1fr));
+        }
+
+        /* Tile Styles (Level 1 Items) - inherit from drop-down-panel */
+        & > .wm-nav__list > .wm-nav__item {
+            background-color: var(--dropdown-panel-tile-bg);
+            border-radius: var(--dropdown-panel-tile-border-radius);
+            border: var(--dropdown-panel-tile-border);
+            padding: var(--dropdown-panel-tile-padding);
+            margin: var(--dropdown-panel-tile-margin);
+            box-shadow: var(--dropdown-panel-tile-shadow);
+        }
+
+        /* Tile headers (main links) */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+            display: block;
+            padding: var(--dropdown-panel-tile-header-padding);
+
+            /* Typography */
+            font-family: var(--dropdown-panel-font-family);
+            font-size: var(--dropdown-panel-tile-header-font-size);
+            font-weight: var(--dropdown-panel-tile-header-font-weight);
+            line-height: var(--dropdown-panel-tile-header-line-height);
+            letter-spacing: var(--dropdown-panel-letter-spacing);
+            text-transform: var(--dropdown-panel-tile-header-text-transform);
+
+            /* Colors - these must be set for hover to work properly */
+            color: var(--dropdown-panel-tile-header-color);
+            background: var(--dropdown-panel-tile-header-bg);
+            border-radius: var(--dropdown-panel-tile-header-border-radius);
+            margin: var(--dropdown-panel-tile-header-margin);
+
+            /* Transitions */
+            transition:
+                background-color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing),
+                color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing);
+        }
+
+        /* Special styling for level-1 items - redundant now but kept for specificity if needed */
+        & > .wm-nav__list > .wm-nav__item.wm-nav__item--level-1 > .wm-nav__link {
+            color: var(--dropdown-panel-tile-header-color);
+            background: var(--dropdown-panel-tile-header-bg);
+            border-radius: var(--dropdown-panel-tile-header-border-radius);
+            margin: var(--dropdown-panel-tile-header-margin);
+        }
+
+        /* Link Description Support */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link > .wm-nav__label-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link > .wm-nav__label-wrapper > .wm-nav__description {
+            font-size: var(--content-panel-description-font-size, 0.8rem);
+            font-weight: var(--content-panel-description-font-weight, 400);
+            color: var(--content-panel-description-color, rgba(255, 255, 255, 0.8));
+            line-height: 1.4;
+            text-transform: none;
+            margin-top: 0.25rem;
+        }
+
+        /* Hide indicators in navigation tiles */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link > .wm-nav__indicator {
+            display: none;
+        }
+
+        /* Tile hover effects */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link:hover {
+            background-color: var(--dropdown-panel-tile-header-hover-bg);
+            color: var(--dropdown-panel-hover-text);
+            border-radius: var(--dropdown-panel-tile-border-radius);
+        }
+
+        /* Ensure hover text applies to labels */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link:hover .wm-nav__label {
+            color: var(--dropdown-panel-hover-text);
+        }
+
+        /* Hover effects for descriptions */
+        & > .wm-nav__list > .wm-nav__item > .wm-nav__link:hover .wm-nav__description {
+            color: var(--content-panel-description-hover-color, rgba(255, 255, 255, 0.9));
+        }
+
+        /* Active state styling */
+        & > .wm-nav__list > .wm-nav__item.wm-nav__item--active > .wm-nav__link {
+            color: var(--dropdown-panel-text);
+            border-radius: var(--dropdown-panel-tile-border-radius);
+
+            &:hover {
+                background-color:var(--dropdown-panel-tile-header-hover-bg);
+                color: var(--dropdown-panel-hover-text);
+            }
+        }
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Layout Variations                                                */
+    /* ----------------------------------------------------------------- */
+
+    /* Content Only Layout */
+    &.wm-nav__item--content-layout-content-only > .wm-nav__submenu .wm-nav__navigation-section {
+        display: none;
+    }
+
+    /* Content Above Layout - column direction */
+    &.wm-nav__item--content-layout-content-above > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+        flex-direction: column !important;
+    }
+
+    /* Content Below Layout - column direction */
+    &.wm-nav__item--content-layout-content-below > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+        flex-direction: column !important;
+    }
+
+    /* Content Left Layout - row direction */
+    &.wm-nav__item--content-layout-content-left > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+        flex-direction: row !important;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+
+        & > .wm-nav__content-blocks {
+            flex: 0 0 var(--content-panel-sidebar-width);
+            width: var(--content-panel-sidebar-width);
+            min-width: var(--content-panel-sidebar-width);
+            margin-right: 1rem;
+        }
+
+        & > .wm-nav__navigation-section {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+    }
+
+    /* Content Right Layout - row direction */
+    &.wm-nav__item--content-layout-content-right > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+        flex-direction: row !important;
+        align-items: flex-start;
+        flex-wrap: nowrap;
+
+        & > .wm-nav__navigation-section {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin-right: 1rem;
+        }
+
+        & > .wm-nav__content-blocks {
+            flex: 0 0 var(--content-panel-sidebar-width);
+            width: var(--content-panel-sidebar-width);
+            min-width: var(--content-panel-sidebar-width);
+        }
+    }
+
+    /* Mixed Layout - responsive grid where content blocks and navigation items flow together
+       This creates a unified grid where both content blocks and navigation sections are treated
+       as equal grid items, allowing for more flexible, responsive arrangements */
+    &.wm-nav__item--content-layout-mixed > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        align-items: start;
+
+        & > .wm-nav__content-blocks,
+        & > .wm-nav__navigation-section {
+            min-width: 0; /* Prevent overflow */
+        }
+
+        /* In mixed layout, content blocks should behave more like navigation sections */
+        & > .wm-nav__content-blocks {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Make navigation section's grid items stack vertically in mixed layout for better balance */
+        & > .wm-nav__navigation-section > .wm-nav__list {
+            grid-template-columns: 1fr; /* Single column in mixed layout */
+        }
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Nested Content (Level 2+) - same as drop-down-panel             */
+    /* ----------------------------------------------------------------- */
+
+    /* Nested submenus: inline rendering - CRITICAL for content-panel */
+    & .wm-nav__item .wm-nav__submenu {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: block !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        border-width: 0 !important;
+        border: none !important;
+        transition: none !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        z-index: auto !important;
+    }
+
+    /* Nested lists: vertical stacking */
+    & .wm-nav__item .wm-nav__submenu > .wm-nav__list {
+        display: block;
+        width: 100%;
+        position: relative;
+        columns: initial;
+        column-gap: normal;
+    }
+
+    /* Nested items: normalized styling */
+    & .wm-nav__item .wm-nav__submenu > .wm-nav__list > .wm-nav__item {
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        break-inside: auto;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Nested item styling */
+    & > .wm-nav__submenu .wm-nav__list > .wm-nav__item .wm-nav__list > .wm-nav__item {
+        border-radius: var(--dropdown-panel-tile-border-radius);
+        padding: var(--dropdown-panel-nested-item-padding);
+    }
+
+    /* Nested links */
+    & .wm-nav__item .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+
+        font-family: var(--dropdown-panel-font-family);
+        font-size: var(--dropdown-panel-nested-font-size);
+        font-weight: var(--dropdown-panel-nested-font-weight);
+        line-height: var(--dropdown-panel-nested-line-height);
+        padding: var(--dropdown-panel-nested-link-padding);
+        text-transform: var(--dropdown-panel-nested-text-transform);
+
+        /* Colors - use dedicated nested color variables */
+        color: var(--dropdown-panel-nested-text);
+        background-color: transparent;
+
+        transition:
+            background-color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing),
+            color var(--dropdown-panel-opacity-duration) var(--dropdown-panel-transition-timing);
+    }
+
+    /* Nested link hover effects */
+    & > .wm-nav__submenu .wm-nav__list > .wm-nav__item .wm-nav__list > .wm-nav__item > .wm-nav__link:hover {
+        background-color: var(--dropdown-panel-nested-hover-bg);
+        color: var(--dropdown-panel-nested-hover-text);
+        border-radius: var(--dropdown-panel-tile-border-radius);
+    }
+
+}
+
+/* ===================================================================== */
+/* WIDTH UTILITY VARIANTS FOR CONTENT PANEL STRATEGY                   */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-content-panel {
+
+    /* Small width variant */
+    &.wm-nav__item--width-small > .wm-nav__submenu {
+        width: var(--width-small);
+    }
+
+    /* Large width variant */
+    &.wm-nav__item--width-large > .wm-nav__submenu {
+        width: var(--width-large);
+    }
+
+    /* Extra large width variant */
+    &.wm-nav__item--width-xl > .wm-nav__submenu {
+        width: var(--width-xl);
+    }
+
+    /* Container width */
+    &.wm-nav__item--match-container > .wm-nav__submenu {
+        width: var(--container-max-width);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
+    }
+
+    /* Site width */
+    &.wm-nav__item--match-site > .wm-nav__submenu {
+        width: var(--site-max-width);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
+    }
+
+    /* Full viewport width */
+    &.wm-nav__item--full-viewport > .wm-nav__submenu {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        max-width: none;
+    }
+}
+
+/* ===================================================================== */
+/* RESPONSIVE BEHAVIOR                                                   */
+/* ===================================================================== */
+
+@media (max-width: 768px) {
+    .wm-nav .wm-nav__item.wm-nav__item--strategy-content-panel {
+        /* Stack layouts vertically on mobile */
+        &.wm-nav__item--content-layout-content-left > .wm-nav__submenu,
+        &.wm-nav__item--content-layout-content-right > .wm-nav__submenu {
+            min-width: auto; /* Remove minimum width on mobile */
+        }
+
+        &.wm-nav__item--content-layout-content-left > .wm-nav__submenu > .wm-nav__content-panel-wrapper,
+        &.wm-nav__item--content-layout-content-right > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+            flex-direction: column;
+            flex-wrap: wrap; /* Allow wrapping on mobile */
+
+            & > .wm-nav__content-blocks,
+            & > .wm-nav__navigation-section {
+                margin: 0;
+                margin-bottom: 1rem;
+                min-width: auto; /* Remove minimum widths on mobile */
+                flex: 1 1 100%; /* Full width on mobile */
+            }
+        }
+
+        /* Reduce grid columns on mobile */
+        & .wm-nav__navigation-section > .wm-nav__list {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+
+        /* Smaller content blocks on mobile */
+        &.wm-nav__item--content-layout-mixed > .wm-nav__submenu > .wm-nav__content-panel-wrapper {
+            grid-template-columns: 1fr;
+        }
+    }
+}

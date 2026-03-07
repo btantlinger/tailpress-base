@@ -1,0 +1,456 @@
+/* Add customization variables */
+:root {
+    /* Overlay */
+    --mobile-overlay-bg: rgba(0, 0, 0, 0.6);
+
+    /* Panel */
+    --mobile-panel-width: 80vw;
+    --mobile-panel-max-width: 24rem; /* 384px */
+    --mobile-panel-bg: #ffffff;
+    --mobile-panel-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+
+    /* Header - Two different background colors */
+    --mobile-header-height: 3.5rem; /* 56px */
+    --mobile-header-top-bg: var(--color-secondary-700, #475569); /* Darker for buttons */
+    --mobile-header-title-bg: var(--color-secondary-500, #64748b); /* Lighter for title */
+    --mobile-header-color: #ffffff;
+    --mobile-header-border: 1px solid rgba(0,0,0,0.1);
+    --mobile-header-padding: 0.75rem; /* 12px */
+
+    /* Back button */
+    --mobile-back-btn-color: #ffffff;
+    --mobile-back-btn-hover: #e5e7eb;
+    --mobile-back-icon-size: 1rem;
+
+    /* Close button */
+    --mobile-close-btn-color: #ffffff;
+    --mobile-close-icon-size: 1.25rem;
+
+    /* Body/list */
+    --mobile-body-bg: #ffffff;
+    --mobile-border-color: #374151;
+    --mobile-item-divider: 1px solid var(--mobile-border-color);
+    --mobile-item-padding: 0.75rem; /* 12px */
+    --mobile-item-color: var(--color-primary-600, #475569);
+    --mobile-item-font-weight: 700;
+
+    /* Drill arrow button */
+    --mobile-drill-btn-bg: var(--color-secondary-500, #60a5fa);
+    --mobile-drill-btn-color: #ffffff;
+    --mobile-drill-btn-size: 2rem; /* 32px */
+    --mobile-drill-btn-radius: 9999px;
+
+    /* Animations */
+    --mobile-transition-duration: 300ms;
+}
+
+
+.wm-nav__mobile {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0.5rem;
+
+    .wm-nav__mobile-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        & > span::before {
+            font-family: 'icomoon';
+            content: '\e925';
+            font-size: 2rem;
+            display: inline-block;
+        }
+    }
+}
+
+.wm-nav__mobile-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    background: var(--mobile-overlay-bg);
+
+    &.wm-nav__transition--enter {
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+        transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        transition-duration: 300ms;
+        transform: translateX(0);
+    }
+
+    &.wm-nav__transition--enter-start {
+        opacity: 0;
+    }
+
+    &.wm-nav__transition--enter-end {
+        opacity: 1;
+    }
+
+    &.wm-nav__transition--leave {
+        transition-property: opacity;
+        transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        transition-duration: 300ms;
+    }
+
+    &.wm-nav__transition--leave-start {
+        opacity: 1;
+    }
+
+    &.wm-nav__transition--leave-end {
+        opacity: 0;
+    }
+}
+
+.wm-nav__mobile-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 80%;
+    max-width: 24rem;
+    background-color: #ffffff;
+    z-index: 50;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    width: var(--mobile-panel-width);
+    max-width: var(--mobile-panel-max-width);
+    background: var(--mobile-panel-bg);
+    box-shadow: var(--mobile-panel-shadow);
+
+    &.wm-nav__transition--enter {
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+        transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        transition-duration: 300ms;
+        transform: translateX(0);
+        transition-duration: var(--mobile-transition-duration);
+    }
+
+    &.wm-nav__transition--enter-start {
+        transform: translateX(-100%);
+    }
+
+    &.wm-nav__transition--enter-end {
+        transform: translateX(0);
+    }
+
+    &.wm-nav__transition--leave {
+        transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+        transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        transition-duration: 300ms;
+        transform: translateX(0);
+        transition-duration: var(--mobile-transition-duration);
+    }
+
+    &.wm-nav__transition--leave-start {
+        transform: translateX(0);
+    }
+
+    &.wm-nav__transition--leave-end {
+        transform: translateX(-100%);
+    }
+
+    .wm-nav__mobile-header {
+        display: flex;
+        flex-direction: column;
+        border-bottom-width: 1px;
+        flex-shrink: 0;
+        color: var(--mobile-header-color);
+        border-bottom: var(--mobile-header-border);
+        min-height: var(--mobile-header-height);
+        height: auto; /* Allow height to grow */
+
+        /* Top row - back button and close button with darker background */
+        .wm-nav__mobile-header__top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: var(--mobile-header-top-bg);
+            padding: var(--mobile-header-padding);
+            min-height: 2rem; /* Minimum height for button row */
+        }
+
+        /* Bottom row - title gets full width with lighter background */
+        .wm-nav__mobile-header__title-row {
+            width: 100%;
+            text-align: center;
+            background: var(--mobile-header-title-bg);
+            padding: 0.5rem var(--mobile-header-padding);
+        }
+
+        .wm-nav__mobile-header__back-btn {
+            flex-shrink: 0;
+
+            & > button {
+                padding: 0.25rem;
+                color: #ffffff;
+                display: inline-flex;
+                align-items: center;
+                font-size: 0.875rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: var(--mobile-back-btn-color);
+
+                &:hover { 
+                    color: #e5e7eb;
+                    color: var(--mobile-back-btn-hover); 
+                }
+
+                &:disabled {
+                    opacity: 0.5;
+                }
+
+                &.wm-nav__transition--enter {
+                    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+                    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+                    transition-duration: 150ms;
+                    transform: translateX(0);
+                }
+
+                &.wm-nav__transition--enter-start {
+                    opacity: 0;
+                }
+
+                &.wm-nav__transition--enter-end {
+                    opacity: 1;
+                }
+
+                &.wm-nav__transition--leave {
+                    transition-property: opacity;
+                    transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+                    transition-duration: 150ms;
+                }
+
+                &.wm-nav__transition--leave-start {
+                    opacity: 1;
+                }
+
+                &.wm-nav__transition--leave-end {
+                    opacity: 0;
+                }
+
+                & > svg {
+                    width: 1rem;
+                    height: 1rem;
+                    margin-right: 0.25rem;
+                    flex-shrink: 0;
+                    width: var(--mobile-back-icon-size);
+                    height: var(--mobile-back-icon-size);
+                }
+
+                & > span {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    /* Ellipsis for back button text */
+                    display: inline-block;
+                    max-width: 8rem; /* Limit back button text width */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        .wm-nav__mobile-header__title {
+            font-weight: 600;
+            text-align: center;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            /* Allow title to wrap to multiple lines if needed */
+            word-wrap: break-word;
+            hyphens: auto;
+            line-height: 1.2;
+            /* Limit to 2 lines maximum */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+
+        .wm-nav__mobile-header__close-btn {
+            flex-shrink: 0;
+
+            & > button {
+                padding: 0.25rem;
+                color: #ffffff;
+                color: var(--mobile-close-btn-color);
+
+                &:hover {
+                    color: #e5e7eb;
+                }
+
+                & > svg {
+                    width: 1.25rem;
+                    height: 1.25rem;
+                    width: var(--mobile-close-icon-size);
+                    height: var(--mobile-close-icon-size);
+                }
+            }
+        }
+    }
+
+    .wm-nav__mobile-body {
+        flex-grow: 1;
+        position: relative;
+        overflow: hidden;
+
+        .wm-nav__mobile-body__content {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            background-image: linear-gradient(to right, #cbd5e1, #f3f4f6);
+            background: var(--mobile-body-bg);
+
+            & > ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                & > li {
+                    border-bottom-width: 1px;
+                    border-color: #3f3f46;
+                    border-bottom: var(--mobile-item-divider);
+
+                    &:last-of-type {
+                        border-bottom-width: 0;
+                    }
+
+                    & > div {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        text-align: left;
+                        color: #1f2937;
+                        font-weight: 700;
+                        font-weight: var(--mobile-item-font-weight);
+
+                        & > a {
+                            display: block;
+                            color: #475569;
+                            padding: 0.75rem;
+                            flex-grow: 1;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            color: var(--mobile-item-color);
+                            padding: var(--mobile-item-padding);
+                            /* Ellipsis for long item labels */
+                            display: block;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+
+                            & > span {
+                                /* keep empty for now */
+                            }
+                        }
+
+                        & > button {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            text-align: center;
+                            background-color: #60a5fa;
+                            color: #ffffff;
+                            width: 2rem;
+                            height: 2rem;
+                            min-width: 2rem;
+                            margin-right: 0.75rem;
+                            border-radius: 9999px;
+                            background: var(--mobile-drill-btn-bg);
+                            color: var(--mobile-drill-btn-color);
+                            width: var(--mobile-drill-btn-size);
+                            height: var(--mobile-drill-btn-size);
+                            min-width: var(--mobile-drill-btn-size);
+                            border-radius: var(--mobile-drill-btn-radius);
+
+                            & > div {
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                text-align: center;
+                                color: #ffffff;
+                                color: inherit;
+
+                                & > span {
+                                    display: inline-flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                    font-size: 1.25rem;
+
+                                    &::before {
+                                        font-family: 'icomoon';
+                                        content: '\e900';
+                                        display: inline-block;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .wm-nav__mobile-staging {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow-y: auto;
+        background-image: linear-gradient(to right, #cbd5e1, #f3f4f6);
+        background: var(--mobile-body-bg);
+
+        & > ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            & > li {
+                border-bottom-width: 1px;
+                border-color: #3f3f46;
+                border-bottom: var(--mobile-item-divider);
+
+                &:last-of-type {
+                    border-bottom-width: 0;
+                }
+
+                & > .wm-nav__mobile-staging__item--animating {
+                    opacity: 0.5;
+                    pointer-events: none;
+
+                    & > span {
+                        display: block;
+                        color: #475569;
+                        padding: 0.75rem;
+                        flex-grow: 1;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        color: var(--mobile-item-color);
+                        padding: var(--mobile-item-padding);
+                        /* Ellipsis for long labels during animation too */
+                        display: block;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+}

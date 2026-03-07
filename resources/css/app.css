@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+@import "../alpine-nav/css/nav-menu.css";
+@import './theme.css';
+@import './utilities.css';
+@import './custom.css' layer(utilities);
+
+/* Safelist for responsive py and my classes */
+@source inline("{sm:,md:,lg:,xl:,}py-{0..72}");
+@source inline("{sm:,md:,lg:,xl:,}my-{0..72}");
+
+/* Safelist for bg and text colors */
+@source inline("{bg,text}-{gray,primary,secondary,slate,zinc,red,orange,amber,yellow,green,cyan,sky,blue,indigo,purple,pink,dark,light,tertiary}-{50,{100..900..100},950}");
+@source inline("{bg,text}-{black,white}");
+
+/* Safelist for text sizes */
+@source inline("text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl,6xl,7xl,8xl}");
+
+/* Safelist for grid columns */
+@source inline("grid-cols-{1..12}");
+@source inline("col-span-{1..12}");
+
+/* Scan PHP templates for Tailwind classes */
+@source '../../vendor/tailpress/framework/**/*.php';
+@source '../../vendor/tailpress/framework/**/**/*.php';
+@source '../js/**/*.js';
+
+/* Alpine element cloaking */
+[x-cloak] {
+    display: none !important;
+}
+
+@utility container {
+    margin-inline: auto;
+    padding-inline: 2rem;
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-zinc-200, currentColor);
+    }
+}

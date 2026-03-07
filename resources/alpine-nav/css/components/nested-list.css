@@ -1,0 +1,5 @@
+.wm-nav.wm-nav--nested-list {
+    ul.wm-nav__list {
+/*        @apply list-disc list-inside pl-3;*/
+    }
+}

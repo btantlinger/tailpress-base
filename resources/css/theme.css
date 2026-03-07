@@ -1,0 +1,99 @@
+@theme {
+    /* Breakpoints */
+    --breakpoint-xs: 480px;
+    --breakpoint-sm: 600px;
+    --breakpoint-md: 782px;
+    --breakpoint-lg: 960px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1440px;
+
+    /* =============================================
+     * THEME COLORS - Change these for each project
+     * ============================================= */
+    --color-primary: #2563eb;
+    --color-secondary: #f59e0b;
+    --color-tertiary: #10b981;
+    --color-dark: #18181C;
+    --color-light: #F4F4F5;
+
+    /* Primary color palette (auto-generated from base) */
+    --color-primary-50: color-mix(in srgb, var(--color-primary) 8%, white);
+    --color-primary-100: color-mix(in srgb, var(--color-primary) 16%, white);
+    --color-primary-200: color-mix(in srgb, var(--color-primary) 32%, white);
+    --color-primary-300: color-mix(in srgb, var(--color-primary) 48%, white);
+    --color-primary-400: color-mix(in srgb, var(--color-primary) 72%, white);
+    --color-primary-500: var(--color-primary);
+    --color-primary-600: color-mix(in srgb, var(--color-primary) 88%, black);
+    --color-primary-700: color-mix(in srgb, var(--color-primary) 76%, black);
+    --color-primary-800: color-mix(in srgb, var(--color-primary) 64%, black);
+    --color-primary-900: color-mix(in srgb, var(--color-primary) 48%, black);
+
+    /* Secondary color palette */
+    --color-secondary-50: color-mix(in srgb, var(--color-secondary) 8%, white);
+    --color-secondary-100: color-mix(in srgb, var(--color-secondary) 16%, white);
+    --color-secondary-200: color-mix(in srgb, var(--color-secondary) 32%, white);
+    --color-secondary-300: color-mix(in srgb, var(--color-secondary) 48%, white);
+    --color-secondary-400: color-mix(in srgb, var(--color-secondary) 72%, white);
+    --color-secondary-500: var(--color-secondary);
+    --color-secondary-600: color-mix(in srgb, var(--color-secondary) 88%, black);
+    --color-secondary-700: color-mix(in srgb, var(--color-secondary) 76%, black);
+    --color-secondary-800: color-mix(in srgb, var(--color-secondary) 64%, black);
+    --color-secondary-900: color-mix(in srgb, var(--color-secondary) 48%, black);
+
+    /* Tertiary color palette */
+    --color-tertiary-50: color-mix(in srgb, var(--color-tertiary) 8%, white);
+    --color-tertiary-100: color-mix(in srgb, var(--color-tertiary) 16%, white);
+    --color-tertiary-200: color-mix(in srgb, var(--color-tertiary) 32%, white);
+    --color-tertiary-300: color-mix(in srgb, var(--color-tertiary) 48%, white);
+    --color-tertiary-400: color-mix(in srgb, var(--color-tertiary) 72%, white);
+    --color-tertiary-500: var(--color-tertiary);
+    --color-tertiary-600: color-mix(in srgb, var(--color-tertiary) 88%, black);
+    --color-tertiary-700: color-mix(in srgb, var(--color-tertiary) 76%, black);
+    --color-tertiary-800: color-mix(in srgb, var(--color-tertiary) 64%, black);
+    --color-tertiary-900: color-mix(in srgb, var(--color-tertiary) 48%, black);
+
+    /* Dark color palette */
+    --color-dark-50: color-mix(in srgb, var(--color-dark) 8%, white);
+    --color-dark-100: color-mix(in srgb, var(--color-dark) 16%, white);
+    --color-dark-200: color-mix(in srgb, var(--color-dark) 32%, white);
+    --color-dark-300: color-mix(in srgb, var(--color-dark) 48%, white);
+    --color-dark-400: color-mix(in srgb, var(--color-dark) 72%, white);
+    --color-dark-500: var(--color-dark);
+    --color-dark-600: color-mix(in srgb, var(--color-dark) 88%, black);
+    --color-dark-700: color-mix(in srgb, var(--color-dark) 76%, black);
+    --color-dark-800: color-mix(in srgb, var(--color-dark) 64%, black);
+    --color-dark-900: color-mix(in srgb, var(--color-dark) 48%, black);
+
+    /* Light color palette */
+    --color-light-50: color-mix(in srgb, var(--color-light) 8%, white);
+    --color-light-100: color-mix(in srgb, var(--color-light) 16%, white);
+    --color-light-200: color-mix(in srgb, var(--color-light) 32%, white);
+    --color-light-300: color-mix(in srgb, var(--color-light) 48%, white);
+    --color-light-400: color-mix(in srgb, var(--color-light) 72%, white);
+    --color-light-500: var(--color-light);
+    --color-light-600: color-mix(in srgb, var(--color-light) 88%, black);
+    --color-light-700: color-mix(in srgb, var(--color-light) 76%, black);
+    --color-light-800: color-mix(in srgb, var(--color-light) 64%, black);
+    --color-light-900: color-mix(in srgb, var(--color-light) 48%, black);
+
+    /* Text sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+    --text-6xl: 3.25rem;
+    --text-7xl: 4.5rem;
+    --text-8xl: 6rem;
+    --text-9xl: 8rem;
+
+    /* Font stacks - customize per project */
+    --font-sans: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-serif: Georgia, "Times New Roman", serif;
+    --font-display: var(--font-sans);
+    --font-heading: var(--font-display);
+}

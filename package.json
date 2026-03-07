@@ -1,0 +1,22 @@
+{
+	"name": "tailpress-base",
+	"version": "1.0.0",
+	"description": "TailPress base theme with Tailwind CSS, Alpine.js, Vite, and ACF auto-loading blocks.",
+	"license": "MIT",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss": "^4.1.12",
+		"@tailwindcss/vite": "^4.0.0",
+		"autoprefixer": "^10.4.21",
+		"postcss": "^8.5.6",
+		"tailwindcss": "^4.1.12",
+		"vite": "^6.3.5"
+	},
+	"dependencies": {
+		"@alpinejs/anchor": "^3.15.0",
+		"alpinejs": "^3.15.0"
+	}
+}

@@ -1,0 +1,270 @@
+/* ========================================
+   ALPINE NAVIGATION - CSS VARIABLES
+   Centralized configuration for all navigation components
+   ======================================== */
+
+:root {
+    /* ===== LAYOUT DIMENSIONS ===== */
+    --container-max-width: 1200px;
+    --site-max-width: 1440px;
+
+    /* ===== NAVBAR BASE ===== */
+    --navbar-bg: var(--color-primary-500);
+    --navbar-height: 4rem;
+    --navbar-padding: 0 1rem;
+    --navbar-border-radius: 0;
+    --navbar-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --navbar-submenu-y-offset: 0px;
+
+    /* ===== TOP LEVEL ITEMS ===== */
+    --navbar-item-color: #ffffff;
+    --navbar-item-hover-color: #dedede;
+    --navbar-item-hover-bg: var(--color-primary-700);
+    --navbar-item-padding: 0.75rem 1rem;
+    --navbar-item-font-size: 0.9375rem;
+    --navbar-item-font-weight: 700;
+    --navbar-item-border-radius: 0.375rem;
+
+    /* ===== TRANSITIONS ===== */
+    --navbar-transition: all 0.2s ease-in-out;
+    --navbar-chevron-transition: transform 200ms ease;
+
+    /* ===== CHEVRON ===== */
+    --navbar-chevron-size: 14px;
+    --navbar-chevron-gap: 0.5rem;
+    --navbar-chevron-margin: 0.125rem;
+
+    /* ===== STRATEGY WIDTHS ===== */
+    --width-small: 400px;
+    --width-default: 800px;
+    --width-large: 1000px;
+    --width-xl: 1200px;
+
+    /* ===== DROP-DOWN PANEL STRATEGY ===== */
+    --dropdown-panel-bg: #c0c0c0;
+    --dropdown-panel-border: rgba(0, 0, 0, 0.05);
+    --dropdown-panel-border-radius: 6px;
+    --dropdown-panel-shadow: rgba(71, 85, 105, 0.3);
+    --dropdown-panel-default-width: var(--width-default);
+
+    /* Drop-down Panel Tiles */
+    --dropdown-panel-tile-bg: #ffffff;
+    --dropdown-panel-tile-shadow: rgba(107, 114, 128, 0.6);
+    --dropdown-panel-tile-header-color: #fff;
+    --dropdown-panel-tile-header-bg: #000;
+
+    --dropdown-panel-tile-border-radius: 0.375rem;
+    --dropdown-panel-tile-border: none;
+    --dropdown-panel-gap: 0.5rem; /* Gap between tiles in grid */
+
+    /* NOTE: Minimum Tile Width Calculations with Percentages
+     * When using percentage-based min-tile-width, account for grid gaps:
+     * - The gap takes up space, so 50% + gap + 50% > 100% (won't fit 2 columns)
+     * - Recommended percentage values:
+     *   • 2 columns: 48% or calc((100% - 0.5rem) / 2)
+     *   • 3 columns: 31% or calc((100% - 1rem) / 3)
+     *   • 4 columns: 23% or calc((100% - 1.5rem) / 4)
+     * - Formula: (100% - (gap × (columns - 1))) / columns
+     * - Using px or rem units avoids this complexity
+     */
+
+    /* Drop-down Panel Text */
+    --dropdown-panel-text: var(--color-primary-500);
+    --dropdown-panel-hover-bg: var(--color-secondary-500);
+    --dropdown-panel-hover-text: #ffffff;
+    --dropdown-panel-tile-header-hover-bg: var(--color-secondary-600);
+
+    /* Nested link colors */
+    --dropdown-panel-nested-text: var(--color-gray-700);
+    --dropdown-panel-nested-hover-text: #ffffff;
+    --dropdown-panel-nested-hover-bg: var(--color-secondary-500);
+
+
+    /* Drop-down Panel Typography */
+    --dropdown-panel-font-family: inherit;
+    --dropdown-panel-font-size: 0.9rem;
+    --dropdown-panel-line-height: 1.5;
+    --dropdown-panel-letter-spacing: 0;
+    --dropdown-panel-tile-header-font-size: 1.1rem;
+    --dropdown-panel-tile-header-font-weight: 700;
+    --dropdown-panel-tile-header-line-height: 1.4;
+    --dropdown-panel-tile-header-text-transform: uppercase;
+    --dropdown-panel-nested-font-size: 0.9rem;
+    --dropdown-panel-nested-font-weight: 400;
+    --dropdown-panel-nested-line-height: 1.4;
+    --dropdown-panel-nested-text-transform: none;
+
+    /* Drop-down Panel Spacing */
+    --dropdown-panel-padding: 0.5rem;
+    --dropdown-panel-tile-padding: 0.5rem;
+    --dropdown-panel-tile-margin: 0 0 0.5rem 0;
+    --dropdown-panel-tile-header-padding: 0.6rem;
+    --dropdown-panel-tile-header-margin: 0 0 5px 0;
+    --dropdown-panel-nested-item-padding: 0.4rem;
+    --dropdown-panel-nested-link-padding: 0.4rem 0.7rem;
+
+    /* ===== DRILL-DOWN STRATEGY ===== */
+    --drill-down-width: 250px;
+    --drill-down-min-width: 12rem;
+    --drill-down-bg: #ffffff;
+    --drill-down-text: var(--color-primary-500);
+    --drill-down-hover-bg: var(--color-primary-500);
+    --drill-down-hover-text: #ffffff;
+    --drill-down-border: rgba(0, 0, 0, 0.05);
+    --drill-down-shadow: rgba(71, 85, 105, 0.3);
+    --drill-down-border-radius: 0.375rem;
+
+    /* Drill-down Typography */
+    --drill-down-font-family: inherit;
+    --drill-down-font-size: 0.875rem;
+    --drill-down-font-weight: 400;
+    --drill-down-line-height: 1.5;
+    --drill-down-letter-spacing: 0;
+    --drill-down-link-font-weight: 400;
+    --drill-down-link-text-decoration: none;
+
+    /* Drill-down Spacing */
+    --drill-down-panel-padding: 5px;
+    --drill-down-item-padding: 0.5rem 1rem;
+    --drill-down-item-margin: 0;
+    --drill-down-submenu-offset: 0;
+
+    /* Drill-down Indicators */
+    --drill-down-indicator-size: 14px;
+    --drill-down-indicator-margin: 0;
+
+    /* ===== FLY-OUT PANEL STRATEGY ===== */
+    --flyout-level0-width: 300px;
+    --flyout-level2-width: 700px;
+    --flyout-level2-min-column-width: 200px;
+
+    /* ===== CONTENT PANEL STRATEGY ===== */
+    --content-panel-default-width: 900px;
+    --content-panel-left-right-min-width: 900px; /* Minimum width for side-by-side layouts */
+    --content-panel-sidebar-width: 250px; /* Width of content blocks in left/right layouts */
+    --content-panel-gap: 1rem;
+    --content-panel-content-gap: 1rem;
+
+    /* Content Block Colors */
+    --content-panel-text-bg: #f8f9fa;
+    --content-panel-text-color: var(--color-gray-700);
+    --content-panel-text-heading-color: var(--color-primary-600);
+    --content-panel-text-heading-font-size: 1.125rem;
+    --content-panel-text-heading-font-weight: 600;
+
+    --content-panel-cta-bg: var(--color-primary-50);
+    --content-panel-cta-border: var(--color-primary-200);
+    --content-panel-cta-heading-color: var(--color-primary-700);
+    --content-panel-cta-text-color: var(--color-gray-600);
+    --content-panel-cta-button-bg: var(--color-primary-500);
+    --content-panel-cta-button-color: #ffffff;
+    --content-panel-cta-button-hover-bg: var(--color-primary-600);
+
+    /* Content Block Spacing */
+    --content-panel-text-padding: 1rem;
+    --content-panel-text-radius: 0.5rem;
+    --content-panel-image-radius: 0.375rem;
+    --content-panel-cta-padding: 1.5rem;
+    --content-panel-cta-radius: 0.5rem;
+    --content-panel-cta-button-radius: 0.375rem;
+
+    /* Description Styling */
+    --content-panel-description-font-size: 0.8rem;
+    --content-panel-description-font-weight: 400;
+    --content-panel-description-color: rgba(255, 255, 255, 0.8);
+    --content-panel-description-hover-color: rgba(255, 255, 255, 0.9);
+
+    /* Fly-out Colors */
+    --flyout-level0-bg-start: #fff;
+    --flyout-level0-bg-end: #fff;
+    --flyout-level0-text: var(--color-primary-500);
+    --flyout-level0-hover-bg: var(--color-secondary-500);
+    --flyout-level0-hover-text: #ffffff;
+    --flyout-level0-border: rgba(0, 0, 0, 0.1);
+    --flyout-level1-text: var(--color-dark-700);
+    --flyout-level1-hover-bg: var(--color-primary-500);
+    --flyout-level1-hover-text: #ffffff;
+    --flyout-level1-border: #bbb;
+    --flyout-level2-bg: #e5e7eb;
+    --flyout-level2-tile-bg: #ffffff;
+    --flyout-level2-text: var(--color-primary-500);
+    --flyout-level2-hover-bg: var(--color-secondary-500);
+    --flyout-level2-hover-text: #ffffff;
+    --flyout-level2-border: rgba(0, 0, 0, 0.05);
+    --flyout-level2-shadow: rgba(71, 85, 105, 0.3);
+    --flyout-level3-text: var(--color-secondary-600);
+    --flyout-level3-hover-bg: var(--color-primary-500);
+    --flyout-level3-hover-text: #ffffff;
+
+    /* Fly-out Typography */
+    --flyout-level0-font-family: inherit;
+    --flyout-level0-font-size: 0.875rem;
+    --flyout-level0-line-height: 1.5;
+    --flyout-level0-letter-spacing: 0;
+    --flyout-level1-font-family: inherit;
+    --flyout-level1-font-size: 0.875rem;
+    --flyout-level1-font-weight: 400;
+    --flyout-level1-line-height: 1.5;
+    --flyout-level1-letter-spacing: 0;
+    --flyout-level2-font-family: inherit;
+    --flyout-level2-font-size: 0.875rem;
+    --flyout-level2-line-height: 1.4;
+    --flyout-level2-letter-spacing: 0;
+    --flyout-level2-tile-header-font-size: 0.875rem;
+    --flyout-level2-tile-header-font-weight: 700;
+    --flyout-level2-tile-header-line-height: 1.4;
+    --flyout-level3-font-family: inherit;
+    --flyout-level3-font-size: 0.8125rem;
+    --flyout-level3-font-weight: 400;
+    --flyout-level3-line-height: 1.4;
+    --flyout-level3-letter-spacing: 0;
+
+    /* Fly-out Spacing */
+    --flyout-level0-padding: 0.25rem 0;
+    --flyout-level1-item-padding: 0.5rem;
+    --flyout-level1-border-width: 1px;
+    --flyout-level2-padding: 0.5rem;
+    --flyout-level2-tile-padding: 0.5rem;
+    --flyout-level2-tile-margin: 0 0 0.5rem 0;
+    --flyout-level2-tile-header-padding: 0.25rem;
+    --flyout-level2-gap: 1rem;
+    --flyout-level3-item-padding: 0.25rem;
+    --flyout-level3-item-margin: 0 0 0.25rem 0;
+    --flyout-level3-link-padding: 0.25rem 0.25rem 0.25rem 0.25rem;
+    --flyout-level3-indent: 0.5rem;
+
+    /* Fly-out Dimensions */
+    --flyout-border-radius: 0.375rem;
+    --flyout-tile-border-radius: 0.375rem;
+    --flyout-indicator-size: 1.25rem;
+    --flyout-indicator-margin: 0 0 0 0.5rem;
+
+    /* ===== MOBILE MENU ===== */
+    --mobile-overlay-bg: rgba(0, 0, 0, 0.6);
+    --mobile-panel-width: 80vw;
+    --mobile-panel-max-width: 24rem;
+    --mobile-panel-bg: #ffffff;
+    --mobile-panel-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+    --mobile-header-height: 3.5rem;
+    --mobile-header-top-bg: var(--color-secondary-700, #475569);
+    --mobile-header-title-bg: var(--color-secondary-500, #64748b);
+    --mobile-header-color: #ffffff;
+    --mobile-header-border: 1px solid rgba(0,0,0,0.1);
+    --mobile-header-padding: 0.75rem;
+    --mobile-back-btn-color: #ffffff;
+    --mobile-back-btn-hover: #e5e7eb;
+    --mobile-back-icon-size: 1rem;
+    --mobile-close-btn-color: #ffffff;
+    --mobile-close-icon-size: 1.25rem;
+    --mobile-body-bg: #ffffff;
+    --mobile-border-color: #374151;
+    --mobile-item-divider: 1px solid var(--mobile-border-color);
+    --mobile-item-padding: 0.75rem;
+    --mobile-item-color: var(--color-primary-600, #475569);
+    --mobile-item-font-weight: 700;
+    --mobile-drill-btn-bg: var(--color-secondary-500, #60a5fa);
+    --mobile-drill-btn-color: #ffffff;
+    --mobile-drill-btn-size: 2rem;
+    --mobile-drill-btn-radius: 9999px;
+    --mobile-transition-duration: 300ms;
+}

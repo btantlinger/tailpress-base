@@ -1,0 +1,240 @@
+
+/* ===================================================================== */
+/* CSS VARIABLES - Drill-down Strategy Configuration                    */
+/* ===================================================================== */
+
+:root {
+    /* Colors */
+    --drill-down-bg: #ffffff;
+    --drill-down-text: var(--color-primary-500);
+    --drill-down-hover-bg: var(--color-primary-500);
+    --drill-down-hover-text: #ffffff;
+    --drill-down-border: rgba(0, 0, 0, 0.05);
+    --drill-down-shadow: rgba(71, 85, 105, 0.3);
+
+    /* Typography */
+    --drill-down-font-family: inherit;
+    --drill-down-font-size: 0.875rem;
+    --drill-down-font-weight: 400;
+    --drill-down-line-height: 1.5;
+    --drill-down-letter-spacing: 0;
+
+    /* Link Typography */
+    --drill-down-link-font-weight: 400;
+    --drill-down-link-text-decoration: none;
+
+    /* Spacing */
+    --drill-down-panel-padding: 5px;
+    --drill-down-item-padding: 0.5rem 1rem;
+    --drill-down-item-margin: 0;
+    --drill-down-submenu-offset: 0;
+
+    /* Dimensions */
+    --drill-down-width: 250px;
+    --drill-down-min-width: 12rem;
+    --drill-down-border-radius: 0.375rem;
+
+    /* Indicators */
+    --drill-down-indicator-size: 14px;
+    --drill-down-indicator-margin: 0;
+
+    /* Animation/Transitions */
+    --drill-down-transition-duration: 200ms;
+    --drill-down-transition-timing: ease-out;
+    --drill-down-opacity-duration: 150ms;
+}
+
+/* ===================================================================== */
+/* MAIN DRILL-DOWN STRATEGY STYLES                                      */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-drill-down {
+
+    /* ----------------------------------------------------------------- */
+    /* Base Submenu Styles (shared by all levels)                      */
+    /* ----------------------------------------------------------------- */
+
+    & > .wm-nav__submenu {
+        /* Positioning and visibility */
+        position: absolute;
+        z-index: 30;
+
+        /* Appearance */
+        background-color: var(--drill-down-bg);
+        border: 1px solid var(--drill-down-border);
+        border-radius: var(--drill-down-border-radius);
+        box-shadow: 0 4px 6px -1px var(--drill-down-shadow), 0 2px 4px -2px var(--drill-down-shadow);
+        padding: var(--drill-down-panel-padding);
+        min-width: var(--drill-down-min-width);
+        width: var(--drill-down-width);
+
+        /* Typography */
+        font-family: var(--drill-down-font-family);
+        font-size: var(--drill-down-font-size);
+        line-height: var(--drill-down-line-height);
+        letter-spacing: var(--drill-down-letter-spacing);
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Level-Specific Positioning                                       */
+    /* ----------------------------------------------------------------- */
+
+    /* Level 0: Drop down from navbar */
+    &.wm-nav__item--level-0 > .wm-nav__submenu {
+        top: calc(100% + var(--navbar-submenu-y-offset)) !important;
+        left: auto;
+    }
+
+    /* Level 1+: Slide out to the right */
+    &:not(.wm-nav__item--level-0) > .wm-nav__submenu {
+        top: 0;
+        left: 100%;
+        margin-left: -1px; /* Slight overlap to prevent gap issues */
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* List and Item Styles                                            */
+    /* ----------------------------------------------------------------- */
+
+    /* Lists: simple vertical stack */
+    & .wm-nav__submenu > .wm-nav__list {
+        position: relative;
+        width: 100%;
+        columns: initial;
+        column-gap: normal;
+    }
+
+    /* Items: normalized appearance */
+    & .wm-nav__submenu > .wm-nav__list > .wm-nav__item {
+        position: relative;
+        margin: var(--drill-down-item-margin);
+        padding: 0;
+        background-color: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        break-inside: auto;
+    }
+
+    & .wm-nav__submenu > .wm-nav__list > .wm-nav__item:hover {
+        color: inherit;
+    }
+
+    /* Links: main styling */
+    & .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: var(--drill-down-item-padding);
+
+        /* Typography */
+        color: var(--drill-down-text);
+        font-family: var(--drill-down-font-family);
+        font-size: var(--drill-down-font-size);
+        font-weight: var(--drill-down-link-font-weight);
+        line-height: var(--drill-down-line-height);
+        letter-spacing: var(--drill-down-letter-spacing);
+        text-decoration: var(--drill-down-link-text-decoration);
+
+        /* Transitions */
+        transition:
+            background-color var(--drill-down-opacity-duration) var(--drill-down-transition-timing),
+            color var(--drill-down-opacity-duration) var(--drill-down-transition-timing);
+    }
+
+    /* Link hover effects */
+    & .wm-nav__submenu > .wm-nav__list > .wm-nav__item > .wm-nav__link:hover {
+        background-color: var(--drill-down-hover-bg);
+        color: var(--drill-down-hover-text);
+        border-radius: var(--drill-down-border-radius);
+    }
+
+    /* ----------------------------------------------------------------- */
+    /* Indicator Styles                                                 */
+    /* ----------------------------------------------------------------- */
+
+    /* Base indicator styles for all parent items */
+    &.wm-nav__item--parent > .wm-nav__link > .wm-nav__indicator {
+        display: inline-flex;
+        align-items: center;
+        margin: var(--drill-down-indicator-margin);
+        flex-shrink: 0;
+    }
+
+    &.wm-nav__item--parent > .wm-nav__link > .wm-nav__indicator::after {
+        font-family: 'icomoon';
+        font-size: var(--drill-down-indicator-size);
+        display: inline-block;
+    }
+
+    /* Level 0 indicators: down chevron with rotation */
+    &.wm-nav__item--level-0.wm-nav__item--parent > .wm-nav__link > .wm-nav__indicator {
+        &::before {
+            display: none; /* Hide any background SVG */
+        }
+
+        &::after {
+            content: '\e901'; /* Down chevron */
+            transition: transform var(--drill-down-transition-duration) var(--drill-down-transition-timing);
+        }
+    }
+
+    /* Rotate level 0 chevron on hover/active */
+    &.wm-nav__item--level-0.wm-nav__item--parent:hover > .wm-nav__link > .wm-nav__indicator::after,
+    &.wm-nav__item--level-0.wm-nav__item--parent.wm-nav__item--active > .wm-nav__link > .wm-nav__indicator::after {
+        transform: rotate(180deg);
+    }
+
+    /* Level 1+ indicators: right chevron */
+    &:not(.wm-nav__item--level-0).wm-nav__item--parent > .wm-nav__link > .wm-nav__indicator::after {
+        content: '\e900'; /* Right chevron */
+    }
+
+}
+
+/* ===================================================================== */
+/* WIDTH UTILITY VARIANTS FOR DRILL-DOWN STRATEGY                       */
+/* ===================================================================== */
+
+.wm-nav .wm-nav__item.wm-nav__item--strategy-drill-down {
+
+    /* Small width variant */
+    &.wm-nav__item--width-small > .wm-nav__submenu {
+        width: var(--width-small);
+    }
+
+    /* Large width variant */  
+    &.wm-nav__item--width-large > .wm-nav__submenu {
+        width: var(--width-large);
+    }
+
+    /* Extra large width variant */
+    &.wm-nav__item--width-xl > .wm-nav__submenu {
+        width: var(--width-xl);
+    }
+
+    /* Container width - centers and constrains to container width */
+    &.wm-nav__item--match-container > .wm-nav__submenu {
+        width: var(--container-max-width);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
+    }
+
+    /* Site width - centers and constrains to site width */
+    &.wm-nav__item--match-site > .wm-nav__submenu {
+        width: var(--site-max-width);
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 90vw;
+    }
+
+    /* Full viewport width */
+    &.wm-nav__item--full-viewport > .wm-nav__submenu {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        max-width: none;
+    }
+}

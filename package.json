@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@alpinejs/anchor": "^3.15.0",
-		"alpinejs": "^3.15.0"
+		"alpinejs": "^3.15.0",
+		"animate.css": "^4.1.1"
 	}
 }

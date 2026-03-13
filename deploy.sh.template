@@ -1,0 +1,461 @@
+#!/bin/bash
+
+# Generic WordPress Deployment Script
+# Usage: ./deploy.sh [commit-hash] [environment] [config-file]
+
+set -e
+
+# =============================================================================
+# CONFIGURATION LOADING
+# =============================================================================
+
+ENVIRONMENT=${2:-staging}
+COMMIT_HASH=${1:-HEAD}
+CONFIG_FILE=${3:-deploy-config.json}
+
+# Check if config file exists
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "❌ Configuration file not found: $CONFIG_FILE"
+    echo "Please create a deploy-config.json file or specify a config file path"
+    exit 1
+fi
+
+# Check if jq is available for JSON parsing
+if ! command -v jq >/dev/null 2>&1; then
+    echo "❌ jq is required but not installed. Please install jq to parse JSON configuration."
+    exit 1
+fi
+
+# Load configuration
+load_config() {
+    local key=$1
+    echo $(jq -r "$key" "$CONFIG_FILE")
+}
+
+load_config_array() {
+    local key=$1
+    echo $(jq -r "$key[]" "$CONFIG_FILE")
+}
+
+# Base configuration from JSON
+REPO_URL=$(load_config '.repository.url')
+COMPANY_NAME=$(load_config '.deployment.companyName // "Generic"')
+KEEP_BACKUPS=$(load_config '.deployment.keepBackups // 5')
+
+# Environment-specific settings from JSON
+if [ "$ENVIRONMENT" != "staging" ] && [ "$ENVIRONMENT" != "production" ]; then
+    echo "❌ Invalid environment: $ENVIRONMENT"
+    echo "Valid environments: staging, production"
+    exit 1
+fi
+
+SITE_PATH=$(load_config ".environments.$ENVIRONMENT.sitePath")
+WEB_ROOT=$(load_config ".environments.$ENVIRONMENT.webRoot")
+BACKUP_PATH=$(load_config ".environments.$ENVIRONMENT.backupPath")
+BRANCH=$(load_config ".repository.branches.$ENVIRONMENT")
+WP_ENV=$(load_config ".environments.$ENVIRONMENT.wpEnv")
+BUILD_MODE=$(load_config ".environments.$ENVIRONMENT.buildMode")
+CACHE_CLEAR_AGGRESSIVE=$(load_config ".environments.$ENVIRONMENT.cacheAgressive")
+
+# Validate required config
+if [ "$SITE_PATH" = "null" ] || [ "$WEB_ROOT" = "null" ] || [ "$REPO_URL" = "null" ]; then
+    echo "❌ Missing required configuration for environment: $ENVIRONMENT"
+    exit 1
+fi
+
+# Derived paths
+BACKUP_NAME="backup_$(date +%Y%m%d_%H%M%S)_${ENVIRONMENT}_${COMMIT_HASH:0:8}"
+BACKUP_DIR="$BACKUP_PATH/$BACKUP_NAME"
+TEMP_DIR="$SITE_PATH/tmp/deploy_$(date +%s)"
+
+# =============================================================================
+# COLORS AND LOGGING
+# =============================================================================
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+log() {
+    local timestamp=$(date +'%H:%M:%S')
+    echo -e "${GREEN}[$timestamp] [$ENVIRONMENT]${NC} $1"
+    if [ -n "$GITHUB_ACTIONS" ]; then
+        echo "::notice title=Deploy Progress::[$timestamp] $1"
+    fi
+}
+
+progress() {
+    local current=$1
+    local total=$2
+    local message=$3
+    local percent=$((current * 100 / total))
+    echo -e "${BLUE}[PROGRESS $percent%] [$current/$total]${NC} $message"
+}
+
+error() { echo -e "${RED}[ERROR] [$ENVIRONMENT]${NC} $1" >&2; }
+warning() { echo -e "${YELLOW}[WARNING] [$ENVIRONMENT]${NC} $1"; }
+info() { echo -e "${BLUE}[INFO] [$ENVIRONMENT]${NC} $1"; }
+success() { echo -e "${CYAN}[SUCCESS] [$ENVIRONMENT]${NC} $1"; }
+
+# =============================================================================
+# ENVIRONMENT CONFIRMATION FOR PRODUCTION
+# =============================================================================
+if [ "$ENVIRONMENT" = "production" ]; then
+    echo ""
+    echo -e "${RED}⚠  PRODUCTION DEPLOYMENT WARNING ⚠${NC}"
+    echo -e "${RED}====================================${NC}"
+    echo -e "${YELLOW}You are about to deploy to PRODUCTION!${NC}"
+    echo -e "${YELLOW}Environment: $ENVIRONMENT${NC}"
+    echo -e "${YELLOW}Server: $(hostname)${NC}"
+    echo -e "${YELLOW}Branch: $BRANCH${NC}"
+    echo -e "${YELLOW}Commit: $COMMIT_HASH${NC}"
+    echo ""
+
+    log " PRODUCTION DEPLOYMENT INITIATED "
+    PROD_LOG_FILE="/var/log/wordpress-deployments-$(date +%Y%m).log"
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] PRODUCTION DEPLOYMENT START - Commit: $COMMIT_HASH - User: $(whoami)" >> "$PROD_LOG_FILE" 2>/dev/null || true
+fi
+
+# =============================================================================
+# UTILITY FUNCTIONS
+# =============================================================================
+rollback_on_failure() {
+    error " Deployment failed! Rolling back..."
+
+    if [ -d "$BACKUP_DIR" ]; then
+        warning "Restoring from backup: $BACKUP_DIR"
+
+        cd "$WEB_ROOT"
+
+        # Restore themes
+        jq -c '.wordpress.themes[]' "$CONFIG_FILE" | while read theme; do
+            theme_name=$(echo $theme | jq -r '.name')
+            theme_path=$(echo $theme | jq -r '.path')
+
+            if [ -f "$BACKUP_DIR/$theme_name.tar.gz" ]; then
+                rm -rf "$theme_path"
+                tar -xzf "$BACKUP_DIR/$theme_name.tar.gz" -C "$(dirname $theme_path)"
+                info "✅ Restored theme: $theme_name"
+            fi
+        done
+
+        # Restore plugins
+        jq -c '.wordpress.plugins[]' "$CONFIG_FILE" | while read plugin; do
+            plugin_name=$(echo $plugin | jq -r '.name')
+            plugin_path=$(echo $plugin | jq -r '.path')
+
+            if [ -f "$BACKUP_DIR/$plugin_name.tar.gz" ]; then
+                rm -rf "$plugin_path"
+                tar -xzf "$BACKUP_DIR/$plugin_name.tar.gz" -C "$(dirname $plugin_path)"
+                info "✅ Restored plugin: $plugin_name"
+            fi
+        done
+
+        success "✅ Rollback completed"
+    else
+        error "❌ No backup found for rollback"
+    fi
+
+    rm -rf "$TEMP_DIR" 2>/dev/null || true
+
+    if [ "$ENVIRONMENT" = "production" ]; then
+        echo "[$(date +'%Y-%m-%d %H:%M:%S')] PRODUCTION DEPLOYMENT FAILED - Commit: $COMMIT_HASH - Rolled back" >> "$PROD_LOG_FILE" 2>/dev/null || true
+    fi
+}
+
+trap rollback_on_failure ERR
+
+# =============================================================================
+# MAIN DEPLOYMENT
+# =============================================================================
+progress 1 10 "Starting $COMPANY_NAME deployment process..."
+echo ""
+echo -e "${PURPLE} $COMPANY_NAME WORDPRESS IN-PLACE DEPLOYMENT STARTING${NC}"
+echo -e "${PURPLE}=========================================${NC}"
+log " Environment: $ENVIRONMENT"
+log " Commit: $COMMIT_HASH"
+log " Branch: $BRANCH"
+log " Web Root: $WEB_ROOT"
+log " Backup: $BACKUP_DIR"
+
+# Create directories
+mkdir -p "$BACKUP_PATH" "$TEMP_DIR" "$SITE_PATH/tmp/.npm"
+chmod 755 "$TEMP_DIR" "$SITE_PATH/tmp/.npm" 2>/dev/null || true
+
+# =============================================================================
+# BACKUP CURRENT SITE
+# =============================================================================
+log " Creating backup of current site..."
+
+mkdir -p "$BACKUP_DIR"
+
+# Backup themes
+jq -c '.wordpress.themes[]' "$CONFIG_FILE" | while read theme; do
+    theme_name=$(echo $theme | jq -r '.name')
+    theme_path=$(echo $theme | jq -r '.path')
+
+    if [ -d "$WEB_ROOT/$theme_path" ]; then
+        tar -czf "$BACKUP_DIR/$theme_name.tar.gz" -C "$WEB_ROOT" "$theme_path"
+        info "✅ Theme backed up: $theme_name"
+    fi
+done
+
+# Backup plugins
+jq -c '.wordpress.plugins[]' "$CONFIG_FILE" | while read plugin; do
+    plugin_name=$(echo $plugin | jq -r '.name')
+    plugin_path=$(echo $plugin | jq -r '.path')
+
+    if [ -d "$WEB_ROOT/$plugin_path" ]; then
+        tar -czf "$BACKUP_DIR/$plugin_name.tar.gz" -C "$WEB_ROOT" "$plugin_path"
+        info "✅ Plugin backed up: $plugin_name"
+    fi
+done
+
+success "✅ Backup created: $BACKUP_DIR"
+progress 2 10 "Backup completed..."
+
+# =============================================================================
+# CLONE AND BUILD IN TEMP DIRECTORY
+# =============================================================================
+log " Cloning repository to temp directory..."
+
+if ! git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TEMP_DIR"; then
+    error "❌ Failed to clone repository branch: $BRANCH"
+    exit 1
+fi
+
+cd "$TEMP_DIR"
+
+if [ "$COMMIT_HASH" != "HEAD" ]; then
+    info " Checking out specific commit: $COMMIT_HASH"
+    git fetch --depth 1 origin "$COMMIT_HASH"
+    git checkout "$COMMIT_HASH"
+fi
+
+rm -rf .git
+success "✅ Repository cloned to temp directory"
+progress 3 10 "Repository cloned..."
+
+# =============================================================================
+# BUILD COMPONENTS
+# =============================================================================
+step_counter=4
+
+# Build plugins
+jq -c '.wordpress.plugins[]' "$CONFIG_FILE" | while read plugin; do
+    plugin_name=$(echo $plugin | jq -r '.name')
+    plugin_path=$(echo $plugin | jq -r '.path')
+    has_composer=$(echo $plugin | jq -r '.hasComposer // false')
+    has_npm=$(echo $plugin | jq -r '.hasNpm // false')
+
+    log " Building plugin: $plugin_name..."
+
+    if [ -d "$TEMP_DIR/$plugin_path" ]; then
+        cd "$TEMP_DIR/$plugin_path"
+
+        if [ "$has_composer" = "true" ] && [ -f "composer.json" ]; then
+            info " Installing plugin composer dependencies ($BUILD_MODE)..."
+            rm -rf vendor
+
+            if composer install $BUILD_MODE --optimize-autoloader --no-interaction; then
+                success "✅ Plugin dependencies installed: $plugin_name"
+            else
+                error "❌ Plugin composer install failed: $plugin_name"
+                exit 1
+            fi
+        fi
+
+        if [ "$has_npm" = "true" ] && [ -f "package.json" ]; then
+            info " Installing plugin npm dependencies: $plugin_name..."
+            rm -rf node_modules
+
+            export npm_config_cache="$SITE_PATH/tmp/.npm"
+            export npm_config_tmp="$SITE_PATH/tmp"
+            export TMPDIR="$SITE_PATH/tmp"
+
+            if npm ci; then
+                success "✅ Plugin npm dependencies installed: $plugin_name"
+
+                build_command=$(echo $plugin | jq -r '.buildCommand // "npm run build"')
+                info " Building plugin assets: $plugin_name..."
+                export NODE_ENV=$WP_ENV
+
+                if NODE_OPTIONS="--max-old-space-size=1024" UV_THREADPOOL_SIZE=4 $build_command; then
+                    success "✅ Plugin assets built: $plugin_name"
+                else
+                    error "❌ Plugin build failed: $plugin_name"
+                    exit 1
+                fi
+
+                rm -rf node_modules
+            else
+                error "❌ Plugin npm install failed: $plugin_name"
+                exit 1
+            fi
+        fi
+    else
+        warning "⚠ Plugin not found at $plugin_path"
+    fi
+done
+
+progress $((step_counter++)) 10 "Plugins built..."
+
+# Build themes
+jq -c '.wordpress.themes[]' "$CONFIG_FILE" | while read theme; do
+    theme_name=$(echo $theme | jq -r '.name')
+    theme_path=$(echo $theme | jq -r '.path')
+    has_composer=$(echo $theme | jq -r '.hasComposer // false')
+    has_npm=$(echo $theme | jq -r '.hasNpm // false')
+
+    log " Building theme: $theme_name..."
+
+    if [ -d "$TEMP_DIR/$theme_path" ]; then
+        cd "$TEMP_DIR/$theme_path"
+
+        if [ "$has_composer" = "true" ] && [ -f "composer.json" ]; then
+            info " Installing theme PHP dependencies ($BUILD_MODE)..."
+            rm -rf vendor
+
+            if composer install $BUILD_MODE --optimize-autoloader --no-interaction; then
+                success "✅ Theme PHP dependencies installed: $theme_name"
+            else
+                error "❌ Theme composer install failed: $theme_name"
+                exit 1
+            fi
+        fi
+
+        if [ "$has_npm" = "true" ] && [ -f "package.json" ]; then
+            info " Installing theme npm dependencies: $theme_name..."
+            rm -rf node_modules
+
+            export npm_config_cache="$SITE_PATH/tmp/.npm"
+            export npm_config_tmp="$SITE_PATH/tmp"
+            export TMPDIR="$SITE_PATH/tmp"
+            mkdir -p "$SITE_PATH/tmp/.npm"
+
+            if npm ci; then
+                success "✅ Theme npm dependencies installed: $theme_name"
+
+                build_command=$(echo $theme | jq -r '.buildCommand // "npm run build"')
+                info " Building theme assets: $theme_name..."
+                export NODE_ENV=$WP_ENV
+
+                if NODE_OPTIONS="--max-old-space-size=1024" UV_THREADPOOL_SIZE=4 $build_command; then
+                    success "✅ Theme assets built: $theme_name"
+                else
+                    error "❌ Theme build failed: $theme_name"
+                    exit 1
+                fi
+
+                rm -rf node_modules
+                info " Cleaned up node_modules: $theme_name"
+            else
+                error "❌ Theme npm install failed: $theme_name"
+                exit 1
+            fi
+        fi
+    else
+        warning "⚠ Theme not found at $theme_path"
+    fi
+done
+
+progress $((step_counter++)) 10 "Themes built..."
+
+# =============================================================================
+# DEPLOY TO LIVE SITE
+# =============================================================================
+log " Deploying built files to live site..."
+
+# Deploy plugins
+jq -c '.wordpress.plugins[]' "$CONFIG_FILE" | while read plugin; do
+    plugin_name=$(echo $plugin | jq -r '.name')
+    plugin_path=$(echo $plugin | jq -r '.path')
+
+    if [ -d "$TEMP_DIR/$plugin_path" ]; then
+        rm -rf "$WEB_ROOT/$plugin_path"
+        cp -r "$TEMP_DIR/$plugin_path" "$WEB_ROOT/$plugin_path"
+        success "✅ Plugin deployed: $plugin_name"
+    fi
+done
+
+# Deploy themes
+jq -c '.wordpress.themes[]' "$CONFIG_FILE" | while read theme; do
+    theme_name=$(echo $theme | jq -r '.name')
+    theme_path=$(echo $theme | jq -r '.path')
+
+    if [ -d "$TEMP_DIR/$theme_path" ]; then
+        rm -rf "$WEB_ROOT/$theme_path"
+        cp -r "$TEMP_DIR/$theme_path" "$WEB_ROOT/$theme_path"
+        success "✅ Theme deployed: $theme_name"
+    fi
+done
+
+progress 8 10 "Files deployed..."
+
+# Set proper permissions
+log " Setting permissions..."
+
+jq -c '.wordpress.themes[]' "$CONFIG_FILE" | while read theme; do
+    theme_path=$(echo $theme | jq -r '.path')
+    find "$WEB_ROOT/$theme_path" -type d -exec chmod 755 {} \; 2>/dev/null || true
+    find "$WEB_ROOT/$theme_path" -type f -exec chmod 644 {} \; 2>/dev/null || true
+done
+
+jq -c '.wordpress.plugins[]' "$CONFIG_FILE" | while read plugin; do
+    plugin_path=$(echo $plugin | jq -r '.path')
+    find "$WEB_ROOT/$plugin_path" -type d -exec chmod 755 {} \; 2>/dev/null || true
+    find "$WEB_ROOT/$plugin_path" -type f -exec chmod 644 {} \; 2>/dev/null || true
+done
+
+progress 9 10 "Permissions set..."
+
+# =============================================================================
+# CLEAR CACHES
+# =============================================================================
+log " Clearing caches..."
+
+if command -v wp >/dev/null 2>&1; then
+    cd "$WEB_ROOT"
+    wp cache flush --allow-root 2>/dev/null || true
+    wp rewrite flush --allow-root 2>/dev/null || true
+
+    if [ "$CACHE_CLEAR_AGGRESSIVE" = "true" ]; then
+        info " Production: Aggressive cache clearing..."
+    fi
+fi
+
+# =============================================================================
+# CLEANUP
+# =============================================================================
+log " Cleaning up..."
+
+rm -rf "$TEMP_DIR"
+
+cd "$BACKUP_PATH"
+ls -t | grep "backup_.*_$ENVIRONMENT" | tail -n +$((KEEP_BACKUPS + 1)) | xargs rm -rf 2>/dev/null || true
+
+success "✅ Cleanup completed"
+
+# =============================================================================
+# SUCCESS LOGGING
+# =============================================================================
+if [ "$ENVIRONMENT" = "production" ]; then
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] PRODUCTION DEPLOYMENT SUCCESS - Commit: $COMMIT_HASH - Backup: $BACKUP_NAME" >> "$PROD_LOG_FILE" 2>/dev/null || true
+fi
+
+echo ""
+echo -e "${PURPLE} $COMPANY_NAME IN-PLACE DEPLOYMENT COMPLETED SUCCESSFULLY!${NC}"
+echo -e "${PURPLE}============================================${NC}"
+echo -e "${CYAN}Environment:${NC} $ENVIRONMENT"
+echo -e "${CYAN}Commit:${NC} $COMMIT_HASH"
+echo -e "${CYAN}Branch:${NC} $BRANCH"
+echo -e "${CYAN}Web Root:${NC} $WEB_ROOT"
+echo -e "${CYAN}Backup:${NC} $BACKUP_NAME"
+echo ""
+progress 10 10 "Deployment completed!"
+
+trap - ERR
+exit 0

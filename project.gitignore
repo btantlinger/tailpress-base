@@ -1,0 +1,66 @@
+# Ignore everything by default
+*
+
+# Allow important project files
+!.gitignore
+!README.md
+!CLAUDE.md
+!.claude/
+!.claude/**
+!composer.json
+!composer.lock
+!package.json
+!package-lock.json
+!deploy-config.json
+!deploy.sh
+!.github/
+!.github/**
+
+# Allow WordPress configuration files we want to track
+#!wp-config-ddev.php
+
+# Allow wp-content directory structure
+!wp-content/
+!wp-content/index.php
+
+# Allow custom themes
+!wp-content/themes/
+!wp-content/themes/index.php
+!wp-content/themes/tailpress/
+!wp-content/themes/tailpress/**
+
+# Allow custom plugins
+!wp-content/plugins/
+!wp-content/plugins/index.php
+
+# Allow mu-plugins if you use them
+!wp-content/mu-plugins/
+!wp-content/mu-plugins/index.php
+!wp-content/mu-plugins/custom-*/
+!wp-content/mu-plugins/custom-*/**
+
+# Ignore vendor directories but allow composer files
+**/vendor/
+!**/composer.json
+!**/composer.lock
+
+# Explicitly ignore some wp-content subdirectories
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/upgrade-temp-backup/
+wp-content/backup*/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/jetpack-waf/
+
+# Development and build files
+node_modules/
+.sass-cache/
+*.log
+.env*
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.map
